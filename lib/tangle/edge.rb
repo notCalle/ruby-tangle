@@ -1,3 +1,5 @@
+require 'tangle/errors'
+
 module Tangle
   #
   # An edge in a graph, connecting two vertices
@@ -16,7 +18,7 @@ module Tangle
       @vertices = Set[vertex1, vertex2]
       @graph = graph
 
-      raise ArgumentError unless valid_edge?
+      validate_edge
     end
 
     # Follow the edge from a vertex to the other end
@@ -43,7 +45,7 @@ module Tangle
       vertices = @vertices.map do |vertex|
         graph.get_vertex(vertex.vertex_id)
       end
-      Edge.new(*vertices, graph: graph)
+      self.class.new(*vertices, graph: graph)
     rescue KeyError
       nil
     end
@@ -60,8 +62,8 @@ module Tangle
 
     private
 
-    def valid_edge?
-      @vertices.all? { |vertex| vertex.graph == @graph }
+    def validate_edge
+      raise GraphError unless @vertices.all? { |vertex| vertex.graph == @graph }
     end
   end
 end
