@@ -54,11 +54,18 @@ module Tangle
       "#<#{self.class}: #{@vertices}>"
     end
 
+    def eql?(other)
+      @graph == other.graph && @vertices == other.vertices
+    end
+    alias == eql?
+    alias === eql?
+    alias equal? eql?
+
     attr_reader :name
     attr_reader :graph
     attr_reader :vertices
 
-    def_delegators :@vertices, :include?
+    def_delegators :@vertices, :include?, :hash
 
     private
 
