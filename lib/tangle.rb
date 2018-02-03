@@ -1,4 +1,5 @@
 require 'tangle/version'
+require 'tangle/graph'
 
 # Tangle manages graphs of things
 #
