@@ -1,3 +1,6 @@
+require 'git-version-bump'
+
 module Tangle
-  VERSION = '0.2.0'.freeze
+  VERSION = GVB.version.freeze
+  DATE = GVB.date.freeze
 end
