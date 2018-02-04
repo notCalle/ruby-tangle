@@ -6,6 +6,8 @@ module Tangle
   # Base class for all kinds of graphs
   #
   class Graph
+    Edge = Tangle::Edge
+
     # Initialize a new graph, optionally preloading it with vertices and edges
     #
     # Graph.new() => Graph
@@ -28,7 +30,7 @@ module Tangle
     def initialize(vertices: nil, edges: nil)
       @vertices_by_id = {}
       @vertices_by_name = {}
-      @edges = []
+      @edges ||= []
 
       initialize_vertices(vertices)
       initialize_edges(edges)
@@ -42,7 +44,7 @@ module Tangle
       if block_given?
         @edges.select(&selector)
       else
-        @edges
+        @edges.to_a
       end
     end
 
@@ -52,7 +54,7 @@ module Tangle
     #
     def add_edge(*vertices, **kvargs)
       vertices = vertices.map { |v| get_vertex(v) }
-      insert_edge(Edge.new(*vertices, graph: self, **kvargs))
+      insert_edge(self.class::Edge.new(*vertices, graph: self, **kvargs))
     end
 
     # Get all vertices.
@@ -97,7 +99,7 @@ module Tangle
     # Unless a selector is provided, the subgraph contains the entire graph.
     #
     def subgraph(&selector)
-      graph = Graph.new
+      graph = self.class.new
 
       dup_vertices_into(graph, &selector)
       dup_edges_into(graph)
