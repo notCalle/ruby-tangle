@@ -86,9 +86,29 @@ module Tangle
       edges.any? { |edge| edge.walk(self) == other }
     end
 
+    # Two vertices are connected if there is a path between them,
+    # and a vertex is connected to itself.
+    #
+    def connected?(other)
+      raise GraphError unless @graph == other.graph
+      return true if self == other
+
+      connected_excluding?(other, Set[self])
+    end
+
     attr_reader :graph
     attr_reader :name
     attr_reader :delegate
     attr_reader :vertex_id
+
+    protected
+
+    def connected_excluding?(other, history)
+      return true if adjacent?(other)
+
+      (neighbours - history).any? do |vertex|
+        vertex.connected_excluding?(other, history << self)
+      end
+    end
   end
 end
