@@ -1,8 +1,17 @@
 require 'tangle/version'
+require 'tangle/errors'
 require 'tangle/graph'
+require 'tangle/simple/graph'
 
-# Tangle manages graphs of things
+# Tangle manages various types of graphs
+#
+# Tangle::MultiGraph.new
+# => Undirected graph without edge constraints
+#
+# Tangle::SimpleGraph.new
+# => Undirected graph with single edges between vertices, and no loops
 #
 module Tangle
-  # Your code goes here...
+  MultiGraph = Tangle::Graph
+  SimpleGraph = Tangle::Simple::Graph
 end
