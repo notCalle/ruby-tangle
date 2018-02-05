@@ -25,6 +25,16 @@ RSpec.describe Tangle::Graph do
     expect(@graph.add_edge(:a, :a)).to be_an Tangle::Edge
   end
 
+  it 'can test (dis)connectedness' do
+    expect(@graph).to respond_to :connected?
+    expect(@graph).to respond_to :disconnected?
+  end
+
+  it 'can produce (dis)connected subgraphs' do
+    expect(@graph).to respond_to :connected_subgraph
+    expect(@graph).to respond_to :disconnected_subgraph
+  end
+
   context 'when initialized' do
     context 'with nothing' do
       before :context do
@@ -38,9 +48,52 @@ RSpec.describe Tangle::Graph do
       it 'has no edges' do
         expect(@graph.edges).to be_empty
       end
+
+      it 'is disconnected' do
+        expect(@graph.disconnected?).to be true
+        expect(@graph.connected?).to be false
+      end
     end
 
-    context 'with vertices and edges' do
+    context 'with one vertex only' do
+      before :context do
+        @graph = Tangle::Graph.new(vertices: { a: {} })
+      end
+
+      it 'has a vertex' do
+        expect(@graph.vertices).not_to be_empty
+      end
+
+      it 'has no edges' do
+        expect(@graph.edges).to be_empty
+      end
+
+      it 'is connected' do
+        expect(@graph.connected?).to be true
+        expect(@graph.disconnected?).to be false
+      end
+    end
+
+    context 'with two vertices only' do
+      before :context do
+        @graph = Tangle::Graph.new(vertices: { a: {}, b: {} })
+      end
+
+      it 'has vertices' do
+        expect(@graph.vertices).not_to be_empty
+      end
+
+      it 'has no edges' do
+        expect(@graph.edges).to be_empty
+      end
+
+      it 'is disconnected' do
+        expect(@graph.disconnected?).to be true
+        expect(@graph.connected?).to be false
+      end
+    end
+
+    context 'with two vertices and an edge' do
       before :context do
         @graph = Tangle::Graph.new(vertices: { a: {}, b: {} }, edges: [%i[a b]])
       end
@@ -49,8 +102,13 @@ RSpec.describe Tangle::Graph do
         expect(@graph.vertices).not_to be_empty
       end
 
-      it 'has edges' do
+      it 'has an edge' do
         expect(@graph.edges).not_to be_empty
+      end
+
+      it 'is connected' do
+        expect(@graph.connected?).to be true
+        expect(@graph.disconnected?).to be false
       end
     end
   end

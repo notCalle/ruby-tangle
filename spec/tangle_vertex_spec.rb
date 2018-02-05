@@ -19,4 +19,53 @@ RSpec.describe Tangle::Vertex do
     expect(Tangle::Vertex.new).to respond_to :edges
     expect(Tangle::Vertex.new.edges).to eq []
   end
+
+  context 'when in an undirected graph' do
+    before :context do
+      @graph = Tangle::Graph.new
+      @vertex_a = @graph.add_vertex(name: 'a')
+      @vertex_b = @graph.add_vertex(name: 'b')
+      @graph.add_edge 'a', 'b'
+      @vertex_c = @graph.add_vertex(name: 'c')
+      @vertex_d = @graph.add_vertex(name: 'd')
+      @graph.add_edge 'b', 'd'
+    end
+
+    it 'can find its neighbours' do
+      expect(@vertex_a).to respond_to :neighbours
+    end
+
+    it 'only includes adjacent vertices in neighbours' do
+      expect(@vertex_a.neighbours).to include @vertex_b
+      expect(@vertex_a.neighbours).not_to include @vertex_c
+    end
+
+    it 'can test adjacency' do
+      expect(@vertex_a).to respond_to :adjacent?
+    end
+
+    it 'is only adjacent to its neighbours' do
+      expect(@vertex_a.adjacent?(@vertex_b)).to be true
+      expect(@vertex_a.adjacent?(@vertex_c)).to be false
+    end
+
+    it 'can test connectivity' do
+      expect(@vertex_a).to respond_to :connected?
+    end
+
+    it 'is connected to itself' do
+      expect(@vertex_a.connected?(@vertex_a)).to be true
+    end
+
+    it 'is connected to adjacent vertices' do
+      expect(@vertex_a.connected?(@vertex_b)).to be true
+    end
+
+    it 'is connected through transitive adjacency' do
+      expect(@vertex_a.adjacent?(@vertex_d)).to be false
+      expect(@vertex_a.adjacent?(@vertex_b)).to be true
+      expect(@vertex_b.adjacent?(@vertex_d)).to be true
+      expect(@vertex_a.connected?(@vertex_d)).to be true
+    end
+  end
 end

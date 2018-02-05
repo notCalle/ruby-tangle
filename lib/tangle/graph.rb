@@ -1,3 +1,4 @@
+require 'tangle/mixin'
 require 'tangle/vertex'
 require 'tangle/edge'
 
@@ -7,6 +8,8 @@ module Tangle
   #
   class Graph
     Edge = Tangle::Edge
+
+    include Tangle::Mixin::Connectedness::Graph
 
     # Initialize a new graph, optionally preloading it with vertices and edges
     #
