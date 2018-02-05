@@ -1,8 +1,19 @@
+[![Gem Version](https://badge.fury.io/rb/tangle.svg)](https://badge.fury.io/rb/tangle)
+
 # Tangle
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tangle`. To experiment with that code, run `bin/console` for an interactive prompt.
+Tangle aims to untangle your graphs, by providing a set of classes for managing different types of graphs, and mixins for adding specific feature sets, like coloring or graphviz export.
 
-TODO: Delete this and the text above, and describe your gem
+**Graph types**:
+ * SimpleGraph
+ * MultiGraph
+ * ~~DiGraph~~
+ * ~~DAG~~
+ * ~~Tree~~
+
+**Feature mixins**:
+ * Connectedness
+ * ~~Coloring~~
 
 ## Installation
 
@@ -22,17 +33,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+g=Tangle::SimpleGraph.new
+g.add_vertex name: 'a'
+g.add_vertex name: 'b'
+g.add_edge 'a', 'b'
+g.connected?
+=> true
+g.add_edge 'b', 'b'
+=> Tangle::LoopError (loops not allowed)
+```
 
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/tangle. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/notCalle/tangle. Pull requests should be rebased to HEAD of `master` before submitting, and all commits must be signed with valid GPG key. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -40,4 +60,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Tangle project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/tangle/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Tangle project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/notCalle/tangle/blob/master/CODE_OF_CONDUCT.md).
