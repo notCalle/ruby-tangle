@@ -6,6 +6,7 @@ module Tangle
   #
   class Edge
     extend Forwardable
+    include Tangle::Mixin::Initialize
 
     # Create a new edge between vertices
     #
@@ -17,6 +18,8 @@ module Tangle
     def initialize(vertex1, vertex2 = vertex1, graph: nil)
       @vertices = Set[vertex1, vertex2]
       @graph = graph
+
+      initialize_mixins
 
       validate_edge
     end

@@ -7,15 +7,15 @@ module Tangle
   # Base class for all kinds of graphs
   #
   class Graph
+    include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
-
-    include Tangle::Mixin::Connectedness::Graph
 
     # Initialize a new graph, optionally preloading it with vertices and edges
     #
     # Graph.new() => Graph
     # Graph.new(vertices: +array_or_hash+) => Graph
     # Graph.new(vertices: +array_or_hash+, edges: +array_or_hash+) => Graph
+    # Graph.new(mixins: [MixinModule, ...], ...) => Graph
     #
     # When +array_or_hash+ is a hash, it contains the objects as values and
     # their names as keys. When +array_or_hash+ is an array the objects will
@@ -27,14 +27,21 @@ module Tangle
     # +edges+ can contain an array of exactly two, either names of vertices
     # or vertices.
     #
+    # +mixins+ is an array of modules that can be mixed into the various
+    # classes that makes up a graph. Initialization of a Graph, Vertex or Edge
+    # looks for submodules in each mixin, with the same name and extends
+    # any created object. Defaults to [Tangle::Mixin::Connectedness].
+    #
     # Any subclass of Graph should also subclass Edge to manage its unique
     # constraints.
     #
-    def initialize(vertices: nil, edges: nil)
+    def initialize(vertices: nil, edges: nil,
+                   mixins: [Tangle::Mixin::Connectedness])
       @vertices_by_id = {}
       @vertices_by_name = {}
       @edges ||= []
 
+      initialize_mixins(mixins)
       initialize_vertices(vertices)
       initialize_edges(edges)
     end
@@ -110,6 +117,8 @@ module Tangle
       graph
     end
     alias dup subgraph
+
+    attr_reader :mixins
 
     protected
 

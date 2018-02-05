@@ -8,7 +8,7 @@ module Tangle
   #
   class Vertex < SimpleDelegator
     include PP::ObjectMixin
-    include Tangle::Mixin::Connectedness::Vertex
+    include Tangle::Mixin::Initialize
 
     # Create a new vertex
     #
@@ -29,6 +29,8 @@ module Tangle
       @name = name
       @delegate = delegate
       @vertex_id = vertex_id
+
+      initialize_mixins
     end
 
     # Duplicate a vertex in a new graph, keeping all other contained attributes
