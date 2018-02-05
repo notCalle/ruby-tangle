@@ -1,5 +1,6 @@
 require 'delegate'
 require 'pp'
+require 'tangle/mixin'
 
 module Tangle
   #
@@ -7,6 +8,7 @@ module Tangle
   #
   class Vertex < SimpleDelegator
     include PP::ObjectMixin
+    include Tangle::Mixin::Connectedness::Vertex
 
     # Create a new vertex
     #
@@ -55,6 +57,12 @@ module Tangle
       @graph.edges { |edge| edge.include? self }
     end
 
+    # Return the set of adjacent vertices
+    #
+    def neighbours
+      Set.new(edges.map { |edge| edge.walk(self) })
+    end
+
     # If two vertices have the same vertex_id, they have the same value
     #
     def ==(other)
@@ -71,6 +79,13 @@ module Tangle
     #
     def eql?(other)
       @object_id == other.object_id
+    end
+
+    # Two vertices are adjacent if there is an edge between them
+    #
+    def adjacent?(other)
+      raise GraphError unless @graph == other.graph
+      edges.any? { |edge| edge.walk(self) == other }
     end
 
     attr_reader :graph
