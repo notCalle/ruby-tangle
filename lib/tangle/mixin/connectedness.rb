@@ -53,20 +53,20 @@ module Tangle
         # Two vertices are connected if there is a path between them,
         # and a vertex is connected to itself.
         #
-        def connected?(other)
+        def connected?(other, test_method: :adjacent?)
           raise GraphError unless @graph == other.graph
           return true if self == other
 
-          connected_excluding?(other, Set[self])
+          connected_excluding?(other, test_method, Set[self])
         end
 
         protected
 
-        def connected_excluding?(other, history)
-          return true if adjacent?(other)
+        def connected_excluding?(other, test_method, history)
+          return true if send(test_method, other)
 
           (neighbours - history).any? do |vertex|
-            vertex.connected_excluding?(other, history << self)
+            vertex.connected_excluding?(other, test_method, history << self)
           end
         end
       end
