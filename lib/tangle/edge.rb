@@ -16,7 +16,7 @@ module Tangle
     # End users should probably use Graph#add_edge instead.
     #
     def initialize(vertex1, vertex2 = vertex1, graph: nil)
-      @vertices = Set[vertex1, vertex2]
+      @vertices ||= Set[vertex1, vertex2]
       @graph = graph
 
       initialize_mixins
