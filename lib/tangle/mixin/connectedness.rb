@@ -1,5 +1,8 @@
 module Tangle
   module Mixin
+    #
+    # Mixins for adding connectedness features
+    #
     module Connectedness
       #
       # Mixin for adding connectedness to a graph
