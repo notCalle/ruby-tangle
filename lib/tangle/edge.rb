@@ -28,9 +28,16 @@ module Tangle
     #
     # walk(vertex) => Vertex
     #
-    def walk(from_vertex)
-      raise RuntimeError unless @vertices.include?(from_vertex)
-      @vertices.find { |other| other != from_vertex } || from_vertex
+    def walk(from_vertex, selector: :other)
+      send(selector, from_vertex)
+    end
+
+    # Return the other vertex for a vertex of this edge
+    #
+    def other(for_vertex)
+      raise RuntimeError unless @vertices.include?(for_vertex)
+
+      @vertices.find { |other| other != for_vertex } || for_vertex
     end
 
     # Duplicate an edge into another graph, replacing original vertices with
