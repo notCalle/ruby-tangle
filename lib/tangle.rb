@@ -2,6 +2,7 @@ require 'tangle/version'
 require 'tangle/errors'
 require 'tangle/graph'
 require 'tangle/simple/graph'
+require 'tangle/directed/graph'
 
 # Tangle manages various types of graphs
 #
@@ -14,4 +15,5 @@ require 'tangle/simple/graph'
 module Tangle
   MultiGraph = Tangle::Graph
   SimpleGraph = Tangle::Simple::Graph
+  DiGraph = Tangle::Directed::Graph
 end
