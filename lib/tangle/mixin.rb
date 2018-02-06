@@ -1,3 +1,4 @@
+require 'tangle/mixin/ancestry'
 require 'tangle/mixin/connectedness'
 
 module Tangle
