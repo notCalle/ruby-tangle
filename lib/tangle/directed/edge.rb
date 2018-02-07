@@ -15,7 +15,7 @@ module Tangle
         @parent == vertex
       end
 
-      def parent(_vertex)
+      def parent(_vertex = nil)
         @parent
       end
 
@@ -23,7 +23,7 @@ module Tangle
         @child == vertex
       end
 
-      def child(_vertex)
+      def child(_vertex = nil)
         @child
       end
     end
