@@ -7,12 +7,13 @@ Tangle aims to untangle your graphs, by providing a set of classes for managing 
 **Graph types**:
  * SimpleGraph
  * MultiGraph
- * ~~DiGraph~~
+ * DiGraph
  * ~~DAG~~
  * ~~Tree~~
 
 **Feature mixins**:
  * Connectedness
+ * Ancestry
  * ~~Coloring~~
 
 ## Installation
