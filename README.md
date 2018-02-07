@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/tangle.svg)](https://badge.fury.io/rb/tangle)
+[![Gem Version](https://badge.fury.io/rb/tangle.svg)](https://badge.fury.io/rb/tangle) [![Maintainability](https://api.codeclimate.com/v1/badges/0d92a4d05b6bb5c06dce/maintainability)](https://codeclimate.com/github/notCalle/ruby-tangle/maintainability)
 
 # Tangle
 

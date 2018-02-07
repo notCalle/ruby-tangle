@@ -61,8 +61,8 @@ module Tangle
 
     # Return the set of adjacent vertices
     #
-    def neighbours
-      Set.new(edges.map { |edge| edge.walk(self) })
+    def neighbours(included = edges)
+      Set.new(included.map { |edge| edge.walk(self) })
     end
 
     # If two vertices have the same vertex_id, they have the same value
