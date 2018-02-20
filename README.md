@@ -2,19 +2,21 @@
 
 # Tangle
 
-Tangle aims to untangle your graphs, by providing a set of classes for managing different types of graphs, and mixins for adding specific feature sets, like coloring or graphviz export.
+Tangle aims to untangle your graphs, by providing a set of classes for managing different types of graphs, and mixins for adding specific feature sets.
 
 **Graph types**:
  * SimpleGraph
  * MultiGraph
  * DiGraph
- * ~~DAG~~
+ * DAG
  * ~~Tree~~
 
 **Feature mixins**:
  * Connectedness
  * Ancestry
+ * ~~Vertex ordering~~
  * ~~Coloring~~
+ * ~~GraphViz~~
 
 ## Installation
 
