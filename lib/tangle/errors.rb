@@ -25,4 +25,12 @@ module Tangle
       super
     end
   end
+
+  # CyclicError is raised when an edge cycle is disallowed.
+  #
+  class CyclicError < RuntimeError
+    def initialize(reason = 'cycles not allowed', *)
+      super
+    end
+  end
 end
