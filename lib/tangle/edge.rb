@@ -1,3 +1,4 @@
+require 'forwardable'
 require 'tangle/errors'
 
 module Tangle
