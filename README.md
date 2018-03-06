@@ -53,6 +53,34 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
+### Mixin API
+
+A mixin is a module with optional submodules for each of the classes
+`Graph`, `Vertex`, and `Edge`. If the mixin needs initial state it
+should provide a keyword initializer `#initialize_kwarg_KEYWORD(argument)`,
+that will be called when the object is `#initalize`d with a matching kwarg.
+
+Example:
+```ruby
+module WeightedEdges
+	module Edge
+		def initialize_kwarg_weight(weight)
+			@weight = weight
+		end
+
+		def weight
+			@weight
+		end
+
+		def weight=(new_weight)
+			@weight = new_weight
+		end
+	end
+end
+
+Tangle::Graph.new(mixins: [WeightedEdges])
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/notCalle/tangle. Pull requests should be rebased to HEAD of `master` before submitting, and all commits must be signed with valid GPG key. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
