@@ -6,7 +6,7 @@ module Tangle
     # An edge in a directed graph
     #
     class Edge < Tangle::Edge
-      def initialize(vertex1, vertex2 = vertex1, graph: nil)
+      def initialize(vertex1, vertex2 = vertex1, **kwargs)
         @child, @parent = @vertices = [vertex1, vertex2]
         super
       end
