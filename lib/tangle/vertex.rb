@@ -22,7 +22,8 @@ module Tangle
     def initialize(graph: nil,
                    name: nil,
                    delegate: nil,
-                   vertex_id: object_id)
+                   vertex_id: object_id,
+                   **kwargs)
       super(delegate) unless delegate.nil?
 
       @graph = graph
@@ -30,7 +31,7 @@ module Tangle
       @delegate = delegate
       @vertex_id = vertex_id
 
-      initialize_mixins
+      initialize_mixins(**kwargs)
     end
 
     # Duplicate a vertex in a new graph, keeping all other contained attributes
