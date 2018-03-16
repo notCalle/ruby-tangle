@@ -9,7 +9,7 @@ module Tangle
     module Initialize
       private
 
-      def initialize_mixins(mixins = nil)
+      def initialize_mixins(mixins = nil, **kwargs)
         case klass = self.class.name[/[^:]+$/].to_sym
         when :Graph
           @mixins = mixins
@@ -18,11 +18,21 @@ module Tangle
         end
 
         extend_with_mixins(klass, mixins) unless mixins.nil?
+        initialize_kwargs(**kwargs) unless kwargs.empty?
       end
 
       def extend_with_mixins(klass, mixins)
         mixins.each do |mixin|
           extend(mixin.const_get(klass)) if mixin.const_defined?(klass)
+        end
+      end
+
+      def initialize_kwargs(**kwargs)
+        kwargs.each do |keyword, argument|
+          initializer = "initialize_kwarg_#{keyword}".to_sym
+          can_init = respond_to?(initializer)
+          raise ArgumentError, "unknown keyword: #{keyword}" unless can_init
+          send initializer, argument
         end
       end
     end

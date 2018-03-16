@@ -16,11 +16,11 @@ module Tangle
     #
     # End users should probably use Graph#add_edge instead.
     #
-    def initialize(vertex1, vertex2 = vertex1, graph: nil)
+    def initialize(vertex1, vertex2 = vertex1, graph: nil, **kwargs)
       @vertices ||= Set[vertex1, vertex2]
       @graph = graph
 
-      initialize_mixins
+      initialize_mixins(**kwargs)
 
       validate_edge
     end

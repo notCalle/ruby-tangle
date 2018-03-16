@@ -36,12 +36,13 @@ module Tangle
     # constraints.
     #
     def initialize(vertices: nil, edges: nil,
-                   mixins: [Tangle::Mixin::Connectedness])
+                   mixins: [Tangle::Mixin::Connectedness],
+                   **kwargs)
       @vertices_by_id = {}
       @vertices_by_name = {}
       @edges ||= []
 
-      initialize_mixins(mixins)
+      initialize_mixins(mixins, **kwargs)
       initialize_vertices(vertices)
       initialize_edges(edges)
     end
