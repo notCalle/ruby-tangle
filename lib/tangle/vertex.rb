@@ -38,11 +38,7 @@ module Tangle
     def clone_into(graph)
       raise ArgumentError if graph == @graph
 
-      Vertex.new(
-        graph:     graph,
-        name:      @name,
-        vertex_id: @vertex_id
-      )
+      clone.with_graph(graph)
     end
 
     # Return all edges that touch this vertex
@@ -87,5 +83,12 @@ module Tangle
     attr_reader :graph
     attr_reader :name
     attr_reader :vertex_id
+
+    protected
+
+    def with_graph(graph)
+      @graph = graph
+      self
+    end
   end
 end
