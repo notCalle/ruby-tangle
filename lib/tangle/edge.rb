@@ -41,16 +41,16 @@ module Tangle
       @vertices.find { |other| other != for_vertex } || for_vertex
     end
 
-    # Duplicate an edge into another graph, replacing original vertices with
+    # Clone an edge into another graph, replacing original vertices with
     # their already prepared duplicates in the other graph. Returns nil if any
     # of the vertices does not exist in the other graph.
     # End users should probably use Graph#subgraph instead.
     #
-    # dup_into(graph) => Edge or nil
+    # clone_into(graph) => Edge or nil
     #
     # Raises an ArgumentError if graph would remain the same.
     #
-    def dup_into(graph)
+    def clone_into(graph)
       raise ArgumentError if graph == @graph
 
       vertices = @vertices.map do |vertex|

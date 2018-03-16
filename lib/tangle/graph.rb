@@ -128,12 +128,12 @@ module Tangle
     def subgraph(&selector)
       graph = self.class.new
 
-      dup_vertices_into(graph, &selector)
-      dup_edges_into(graph)
+      clone_vertices_into(graph, &selector)
+      clone_edges_into(graph)
 
       graph
     end
-    alias dup subgraph
+    alias clone subgraph
 
     attr_reader :mixins
 
@@ -168,15 +168,15 @@ module Tangle
       @edges = []
     end
 
-    def dup_vertices_into(graph, &selector)
+    def clone_vertices_into(graph, &selector)
       vertices(&selector).each do |vertex|
-        graph.insert_vertex(vertex.dup_into(graph))
+        graph.insert_vertex(vertex.clone_into(graph))
       end
     end
 
-    def dup_edges_into(graph)
+    def clone_edges_into(graph)
       edges.each do |edge|
-        new_edge = edge.dup_into(graph)
+        new_edge = edge.clone_into(graph)
         graph.insert_edge(new_edge) unless new_edge.nil?
       end
     end

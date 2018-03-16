@@ -28,14 +28,14 @@ module Tangle
       initialize_mixins(**kwargs)
     end
 
-    # Duplicate a vertex in a new graph, keeping all other contained attributes
-    # End users should probably use Graph#subgrap instead.
+    # Clone a vertex in a new graph, keeping all other contained attributes
+    # End users should probably use Graph#subgraph instead.
     #
-    # dup_into(new_graph) => Vertex
+    # clone_into(new_graph) => Vertex
     #
     # Raises an ArgumentError if graph would remain the same.
     #
-    def dup_into(graph)
+    def clone_into(graph)
       raise ArgumentError if graph == @graph
 
       Vertex.new(
