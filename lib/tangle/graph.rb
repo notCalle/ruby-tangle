@@ -16,15 +16,14 @@ module Tangle
     # Graph[+vertices+] => Graph
     # Graph[+vertices+, +edges+) => Graph
     #
-    # When +vertices+ is a hash, it contains the objects as values and
-    # their names as keys. When +vertices+ is an array the objects will
-    # get assigned unique names (within the graph).
-    #
-    # +vertices+ can contain anything, and the Vertex object that is created
-    # will delegate all missing methods to its content.
+    # When +vertices+ is a hash, it contains initialization kwargs as
+    # values and vertex names as keys. When +vertices+ is an array of
+    # initialization kwargs, the vertices will be be anonymous.
     #
     # +edges+ can contain an array of exactly two, either names of vertices
     # or vertices.
+    #
+    # Any kwarg supported by Graph.new is also allowed.
     #
     def self.[](vertices, edges = {}, **kwargs)
       graph = new(**kwargs)
@@ -36,19 +35,7 @@ module Tangle
     # Initialize a new graph, optionally preloading it with vertices and edges
     #
     # Graph.new() => Graph
-    # Graph.new(vertices: +array_or_hash+) => Graph
-    # Graph.new(vertices: +array_or_hash+, edges: +array_or_hash+) => Graph
     # Graph.new(mixins: [MixinModule, ...], ...) => Graph
-    #
-    # When +array_or_hash+ is a hash, it contains the objects as values and
-    # their names as keys. When +array_or_hash+ is an array the objects will
-    # get assigned unique names (within the graph).
-    #
-    # +vertices+ can contain anything, and the Vertex object that is created
-    # will delegate all missing methods to its content.
-    #
-    # +edges+ can contain an array of exactly two, either names of vertices
-    # or vertices.
     #
     # +mixins+ is an array of modules that can be mixed into the various
     # classes that makes up a graph. Initialization of a Graph, Vertex or Edge
@@ -103,7 +90,6 @@ module Tangle
     #
     # Optional named arguments:
     #   name: unique name or label for vertex
-    #   contents: delegate object for missing methods
     #
     def add_vertex(**kvargs)
       insert_vertex(Vertex.new(graph: self, **kvargs))
@@ -112,12 +98,12 @@ module Tangle
     def add_vertices(vertices)
       case vertices
       when Array
-        vertices.each do |delegate|
-          add_vertex(delegate: delegate)
+        vertices.each do |kwargs|
+          add_vertex(**kwargs)
         end
       when Hash
-        vertices.each do |name, delegate|
-          add_vertex(name: name, delegate: delegate)
+        vertices.each do |name, kwargs|
+          add_vertex(name: name, **kwargs)
         end
       end
     end
