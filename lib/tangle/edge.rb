@@ -17,8 +17,8 @@ module Tangle
     # End users should probably use Graph#add_edge instead.
     #
     def initialize(vertex1, vertex2 = vertex1, graph: nil, **kwargs)
-      @vertices ||= Set[vertex1, vertex2]
-      @graph = graph
+      with_graph(graph)
+      with_vertices(vertex1, vertex2)
 
       initialize_mixins(**kwargs)
 
@@ -56,7 +56,8 @@ module Tangle
       vertices = @vertices.map do |vertex|
         graph.get_vertex(vertex.vertex_id)
       end
-      self.class.new(*vertices, graph: graph)
+
+      clone.with_graph(graph).with_vertices(*vertices)
     rescue KeyError
       nil
     end
@@ -77,6 +78,18 @@ module Tangle
     attr_reader :vertices
 
     def_delegators :@vertices, :include?, :hash
+
+    protected
+
+    def with_graph(graph)
+      @graph = graph
+      self
+    end
+
+    def with_vertices(vertex1, vertex2 = vertex1)
+      @vertices = Set[vertex1, vertex2]
+      self
+    end
 
     private
 
