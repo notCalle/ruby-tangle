@@ -6,11 +6,6 @@ module Tangle
     # An edge in a directed graph
     #
     class Edge < Tangle::Edge
-      def initialize(vertex1, vertex2 = vertex1, **kwargs)
-        with_vertices(vertex1, vertex2)
-        super
-      end
-
       def parent?(vertex)
         @parent == vertex
       end
