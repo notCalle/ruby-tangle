@@ -9,6 +9,7 @@ module Tangle
   class Graph
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
+    DEFAULT_MIXINS = [Tangle::Mixin::Connectedness].freeze
 
     # Initialize a new graph, optionally preloading it with vertices and edges
     #
@@ -35,16 +36,10 @@ module Tangle
     # Any subclass of Graph should also subclass Edge to manage its unique
     # constraints.
     #
-    def initialize(vertices: nil, edges: nil,
-                   mixins: [Tangle::Mixin::Connectedness],
-                   **kwargs)
-      @vertices_by_id = {}
-      @vertices_by_name = {}
-      @edges ||= []
-
+    def initialize(mixins: self.class::DEFAULT_MIXINS, **kwargs)
       initialize_mixins(mixins, **kwargs)
-      initialize_vertices(vertices)
-      initialize_edges(edges)
+      initialize_vertices
+      initialize_edges
     end
 
     # Get all edges.
@@ -143,15 +138,9 @@ module Tangle
 
     private
 
-    def initialize_vertices(vertices)
-      return if vertices.nil?
-
-      case vertices
-      when Hash
-        initialize_named_vertices(vertices)
-      else
-        initialize_anonymous_vertices(vertices)
-      end
+    def initialize_vertices
+      @vertices_by_id = {}
+      @vertices_by_name = {}
     end
 
     def initialize_named_vertices(vertices)
@@ -166,12 +155,8 @@ module Tangle
       end
     end
 
-    def initialize_edges(edges)
-      return if edges.nil?
-
-      edges.each do |vertices|
-        add_edge(*vertices)
-      end
+    def initialize_edges
+      @edges = []
     end
 
     def dup_vertices_into(graph, &selector)
