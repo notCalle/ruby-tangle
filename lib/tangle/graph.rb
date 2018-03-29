@@ -9,6 +9,29 @@ module Tangle
   class Graph
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
+    DEFAULT_MIXINS = [Tangle::Mixin::Connectedness].freeze
+
+    # Initialize a new graph, preloading it with vertices and edges
+    #
+    # Graph[+vertices+] => Graph
+    # Graph[+vertices+, +edges+) => Graph
+    #
+    # When +vertices+ is a hash, it contains the objects as values and
+    # their names as keys. When +vertices+ is an array the objects will
+    # get assigned unique names (within the graph).
+    #
+    # +vertices+ can contain anything, and the Vertex object that is created
+    # will delegate all missing methods to its content.
+    #
+    # +edges+ can contain an array of exactly two, either names of vertices
+    # or vertices.
+    #
+    def self.[](vertices, edges = {}, **kwargs)
+      graph = new(**kwargs)
+      graph.add_vertices(vertices)
+      edges.each { |from, to| graph.add_edge(from, to) }
+      graph
+    end
 
     # Initialize a new graph, optionally preloading it with vertices and edges
     #
@@ -35,16 +58,10 @@ module Tangle
     # Any subclass of Graph should also subclass Edge to manage its unique
     # constraints.
     #
-    def initialize(vertices: nil, edges: nil,
-                   mixins: [Tangle::Mixin::Connectedness],
-                   **kwargs)
-      @vertices_by_id = {}
-      @vertices_by_name = {}
-      @edges ||= []
-
+    def initialize(mixins: self.class::DEFAULT_MIXINS, **kwargs)
       initialize_mixins(mixins, **kwargs)
-      initialize_vertices(vertices)
-      initialize_edges(edges)
+      initialize_vertices
+      initialize_edges
     end
 
     # Get all edges.
@@ -90,6 +107,19 @@ module Tangle
     #
     def add_vertex(**kvargs)
       insert_vertex(Vertex.new(graph: self, **kvargs))
+    end
+
+    def add_vertices(vertices)
+      case vertices
+      when Array
+        vertices.each do |delegate|
+          add_vertex(delegate: delegate)
+        end
+      when Hash
+        vertices.each do |name, delegate|
+          add_vertex(name: name, delegate: delegate)
+        end
+      end
     end
 
     def get_vertex(name_or_vertex)
@@ -143,35 +173,13 @@ module Tangle
 
     private
 
-    def initialize_vertices(vertices)
-      return if vertices.nil?
-
-      case vertices
-      when Hash
-        initialize_named_vertices(vertices)
-      else
-        initialize_anonymous_vertices(vertices)
-      end
+    def initialize_vertices
+      @vertices_by_id = {}
+      @vertices_by_name = {}
     end
 
-    def initialize_named_vertices(vertices)
-      vertices.each do |name, delegate|
-        add_vertex(name: name, delegate: delegate)
-      end
-    end
-
-    def initialize_anonymous_vertices(vertices)
-      vertices.each do |delegate|
-        add_vertex(delegate: delegate)
-      end
-    end
-
-    def initialize_edges(edges)
-      return if edges.nil?
-
-      edges.each do |vertices|
-        add_edge(*vertices)
-      end
+    def initialize_edges
+      @edges = []
     end
 
     def dup_vertices_into(graph, &selector)

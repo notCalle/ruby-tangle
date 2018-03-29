@@ -8,10 +8,6 @@ module Tangle
     class Graph < Tangle::Graph
       Edge = Tangle::Directed::Edge
       DEFAULT_MIXINS = [Tangle::Mixin::Ancestry].freeze
-
-      def initialize(mixins: DEFAULT_MIXINS, **kwargs)
-        super
-      end
     end
   end
 end

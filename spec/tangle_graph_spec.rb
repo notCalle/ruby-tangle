@@ -57,7 +57,7 @@ RSpec.describe Tangle::Graph do
 
     context 'with one vertex only' do
       before :context do
-        @graph = Tangle::Graph.new(vertices: { a: {} })
+        @graph = Tangle::Graph[{ a: {} }]
       end
 
       it 'has a vertex' do
@@ -76,7 +76,7 @@ RSpec.describe Tangle::Graph do
 
     context 'with two vertices only' do
       before :context do
-        @graph = Tangle::Graph.new(vertices: { a: {}, b: {} })
+        @graph = Tangle::Graph[{ a: {}, b: {} }]
       end
 
       it 'has vertices' do
@@ -95,7 +95,7 @@ RSpec.describe Tangle::Graph do
 
     context 'with two vertices and an edge' do
       before :context do
-        @graph = Tangle::Graph.new(vertices: { a: {}, b: {} }, edges: [%i[a b]])
+        @graph = Tangle::Graph[{ a: {}, b: {} }, [%i[a b]]]
       end
 
       it 'has vertices' do
