@@ -11,6 +11,28 @@ module Tangle
     Edge = Tangle::Edge
     DEFAULT_MIXINS = [Tangle::Mixin::Connectedness].freeze
 
+    # Initialize a new graph, preloading it with vertices and edges
+    #
+    # Graph[+vertices+] => Graph
+    # Graph[+vertices+, +edges+) => Graph
+    #
+    # When +vertices+ is a hash, it contains the objects as values and
+    # their names as keys. When +vertices+ is an array the objects will
+    # get assigned unique names (within the graph).
+    #
+    # +vertices+ can contain anything, and the Vertex object that is created
+    # will delegate all missing methods to its content.
+    #
+    # +edges+ can contain an array of exactly two, either names of vertices
+    # or vertices.
+    #
+    def self.[](vertices, edges = {}, **kwargs)
+      graph = new(**kwargs)
+      graph.add_vertices(vertices)
+      edges.each { |from, to| graph.add_edge(from, to) }
+      graph
+    end
+
     # Initialize a new graph, optionally preloading it with vertices and edges
     #
     # Graph.new() => Graph
@@ -87,6 +109,19 @@ module Tangle
       insert_vertex(Vertex.new(graph: self, **kvargs))
     end
 
+    def add_vertices(vertices)
+      case vertices
+      when Array
+        vertices.each do |delegate|
+          add_vertex(delegate: delegate)
+        end
+      when Hash
+        vertices.each do |name, delegate|
+          add_vertex(name: name, delegate: delegate)
+        end
+      end
+    end
+
     def get_vertex(name_or_vertex)
       case name_or_vertex
       when Vertex
@@ -141,18 +176,6 @@ module Tangle
     def initialize_vertices
       @vertices_by_id = {}
       @vertices_by_name = {}
-    end
-
-    def initialize_named_vertices(vertices)
-      vertices.each do |name, delegate|
-        add_vertex(name: name, delegate: delegate)
-      end
-    end
-
-    def initialize_anonymous_vertices(vertices)
-      vertices.each do |delegate|
-        add_vertex(delegate: delegate)
-      end
     end
 
     def initialize_edges
