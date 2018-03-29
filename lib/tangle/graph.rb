@@ -97,14 +97,10 @@ module Tangle
 
     def add_vertices(vertices)
       case vertices
-      when Array
-        vertices.each do |kwargs|
-          add_vertex(**kwargs)
-        end
       when Hash
-        vertices.each do |name, kwargs|
-          add_vertex(name: name, **kwargs)
-        end
+        vertices.each { |name, kwargs| add_vertex(name: name, **kwargs) }
+      else
+        vertices.each { |kwargs| add_vertex(**kwargs) }
       end
     end
 
@@ -126,14 +122,8 @@ module Tangle
     # Unless a selector is provided, the subgraph contains the entire graph.
     #
     def subgraph(&selector)
-      graph = self.class.new
-
-      clone_vertices_into(graph, &selector)
-      clone_edges_into(graph)
-
-      graph
+      clone.with_vertices(vertices(&selector)).with_edges(edges)
     end
-    alias clone subgraph
 
     attr_reader :mixins
 
@@ -155,6 +145,25 @@ module Tangle
 
       @edges << edge
       edge
+    end
+
+    def with_vertices(vertices = [])
+      initialize_vertices
+
+      vertices.each do |vertex|
+        insert_vertex(vertex.clone_into(self))
+      end
+      self
+    end
+
+    def with_edges(edges = [])
+      initialize_edges
+
+      edges.each do |edge|
+        new_edge = edge.clone_into(self)
+        insert_edge(new_edge) unless new_edge.nil?
+      end
+      self
     end
 
     private
