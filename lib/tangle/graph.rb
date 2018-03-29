@@ -1,12 +1,16 @@
 require 'tangle/mixin'
 require 'tangle/vertex'
 require 'tangle/edge'
+require 'tangle/graph_private'
+require 'tangle/graph_protected'
 
 module Tangle
   #
   # Base class for all kinds of graphs
   #
   class Graph
+    include Tangle::GraphPrivate
+    include Tangle::GraphProtected
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
     DEFAULT_MIXINS = [Tangle::Mixin::Connectedness].freeze
@@ -126,68 +130,5 @@ module Tangle
     end
 
     attr_reader :mixins
-
-    protected
-
-    # Insert a prepared vertex into the graph
-    #
-    def insert_vertex(vertex)
-      raise ArgumentError unless vertex.graph.eql?(self)
-
-      @vertices_by_name[vertex.name] = vertex unless vertex.name.nil?
-      @vertices_by_id[vertex.vertex_id] = vertex
-    end
-
-    # Insert a prepared edge into the graph
-    #
-    def insert_edge(edge)
-      raise ArgumentError unless edge.graph.eql?(self)
-
-      @edges << edge
-      edge
-    end
-
-    def with_vertices(vertices = [])
-      initialize_vertices
-
-      vertices.each do |vertex|
-        insert_vertex(vertex.clone_into(self))
-      end
-      self
-    end
-
-    def with_edges(edges = [])
-      initialize_edges
-
-      edges.each do |edge|
-        new_edge = edge.clone_into(self)
-        insert_edge(new_edge) unless new_edge.nil?
-      end
-      self
-    end
-
-    private
-
-    def initialize_vertices
-      @vertices_by_id = {}
-      @vertices_by_name = {}
-    end
-
-    def initialize_edges
-      @edges = []
-    end
-
-    def clone_vertices_into(graph, &selector)
-      vertices(&selector).each do |vertex|
-        graph.insert_vertex(vertex.clone_into(graph))
-      end
-    end
-
-    def clone_edges_into(graph)
-      edges.each do |edge|
-        new_edge = edge.clone_into(graph)
-        graph.insert_edge(new_edge) unless new_edge.nil?
-      end
-    end
   end
 end
