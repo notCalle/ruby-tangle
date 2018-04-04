@@ -1,15 +1,6 @@
 require 'tangle/vertex'
 
 RSpec.describe Tangle::Vertex do
-  it 'is a simple delegator' do
-    expect(Tangle::Vertex.new).to be_a SimpleDelegator
-  end
-
-  it 'can delegate missing methods' do
-    expect(Tangle::Vertex.new).not_to respond_to :fetch
-    expect(Tangle::Vertex.new(delegate: {})).to respond_to :fetch
-  end
-
   it 'can have a name' do
     expect(Tangle::Vertex.new).to respond_to :name
     expect(Tangle::Vertex.new(name: 'a').name).to eq 'a'
@@ -151,6 +142,22 @@ RSpec.describe Tangle::Vertex do
       expect(@vertex_c.child?(@vertex_b)).to be true
       expect(@vertex_b.child?(@vertex_a)).to be true
       expect(@vertex_c.descendant?(@vertex_a)).to be true
+    end
+  end
+
+  context 'when cloned into a subgraph' do
+    before :context do
+      @mixin = Helpers::TestMixin
+      @graph = Tangle::Graph[{ a: {} }, [%i[a a]], mixins: [@mixin]]
+      @subgraph = @graph.subgraph
+    end
+
+    it 'retains all mixin methods' do
+      @subgraph.vertices.each do |vertex|
+        @mixin::Vertex.public_instance_methods.each do |method|
+          expect(vertex).to respond_to method
+        end
+      end
     end
   end
 end

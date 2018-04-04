@@ -1,31 +1,45 @@
 require 'tangle/mixin'
 require 'tangle/vertex'
 require 'tangle/edge'
+require 'tangle/graph_private'
+require 'tangle/graph_protected'
 
 module Tangle
   #
   # Base class for all kinds of graphs
   #
   class Graph
+    include Tangle::GraphPrivate
+    include Tangle::GraphProtected
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
+    DEFAULT_MIXINS = [Tangle::Mixin::Connectedness].freeze
+
+    # Initialize a new graph, preloading it with vertices and edges
+    #
+    # Graph[+vertices+] => Graph
+    # Graph[+vertices+, +edges+) => Graph
+    #
+    # When +vertices+ is a hash, it contains initialization kwargs as
+    # values and vertex names as keys. When +vertices+ is an array of
+    # initialization kwargs, the vertices will be be anonymous.
+    #
+    # +edges+ can contain an array of exactly two, either names of vertices
+    # or vertices.
+    #
+    # Any kwarg supported by Graph.new is also allowed.
+    #
+    def self.[](vertices, edges = {}, **kwargs)
+      graph = new(**kwargs)
+      graph.add_vertices(vertices)
+      edges.each { |from, to| graph.add_edge(from, to) }
+      graph
+    end
 
     # Initialize a new graph, optionally preloading it with vertices and edges
     #
     # Graph.new() => Graph
-    # Graph.new(vertices: +array_or_hash+) => Graph
-    # Graph.new(vertices: +array_or_hash+, edges: +array_or_hash+) => Graph
     # Graph.new(mixins: [MixinModule, ...], ...) => Graph
-    #
-    # When +array_or_hash+ is a hash, it contains the objects as values and
-    # their names as keys. When +array_or_hash+ is an array the objects will
-    # get assigned unique names (within the graph).
-    #
-    # +vertices+ can contain anything, and the Vertex object that is created
-    # will delegate all missing methods to its content.
-    #
-    # +edges+ can contain an array of exactly two, either names of vertices
-    # or vertices.
     #
     # +mixins+ is an array of modules that can be mixed into the various
     # classes that makes up a graph. Initialization of a Graph, Vertex or Edge
@@ -35,15 +49,10 @@ module Tangle
     # Any subclass of Graph should also subclass Edge to manage its unique
     # constraints.
     #
-    def initialize(vertices: nil, edges: nil,
-                   mixins: [Tangle::Mixin::Connectedness])
-      @vertices_by_id = {}
-      @vertices_by_name = {}
-      @edges ||= []
-
-      initialize_mixins(mixins)
-      initialize_vertices(vertices)
-      initialize_edges(edges)
+    def initialize(mixins: self.class::DEFAULT_MIXINS, **kwargs)
+      initialize_mixins(mixins, **kwargs)
+      initialize_vertices
+      initialize_edges
     end
 
     # Get all edges.
@@ -85,10 +94,18 @@ module Tangle
     #
     # Optional named arguments:
     #   name: unique name or label for vertex
-    #   contents: delegate object for missing methods
     #
     def add_vertex(**kvargs)
       insert_vertex(Vertex.new(graph: self, **kvargs))
+    end
+
+    def add_vertices(vertices)
+      case vertices
+      when Hash
+        vertices.each { |name, kwargs| add_vertex(name: name, **kwargs) }
+      else
+        vertices.each { |kwargs| add_vertex(**kwargs) }
+      end
     end
 
     def get_vertex(name_or_vertex)
@@ -109,81 +126,9 @@ module Tangle
     # Unless a selector is provided, the subgraph contains the entire graph.
     #
     def subgraph(&selector)
-      graph = self.class.new
-
-      dup_vertices_into(graph, &selector)
-      dup_edges_into(graph)
-
-      graph
+      clone.with_vertices(vertices(&selector)).with_edges(edges)
     end
-    alias dup subgraph
 
     attr_reader :mixins
-
-    protected
-
-    # Insert a prepared vertex into the graph
-    #
-    def insert_vertex(vertex)
-      raise ArgumentError unless vertex.graph.eql?(self)
-
-      @vertices_by_name[vertex.name] = vertex unless vertex.name.nil?
-      @vertices_by_id[vertex.vertex_id] = vertex
-    end
-
-    # Insert a prepared edge into the graph
-    #
-    def insert_edge(edge)
-      raise ArgumentError unless edge.graph.eql?(self)
-
-      @edges << edge
-      edge
-    end
-
-    private
-
-    def initialize_vertices(vertices)
-      return if vertices.nil?
-
-      case vertices
-      when Hash
-        initialize_named_vertices(vertices)
-      else
-        initialize_anonymous_vertices(vertices)
-      end
-    end
-
-    def initialize_named_vertices(vertices)
-      vertices.each do |name, delegate|
-        add_vertex(name: name, delegate: delegate)
-      end
-    end
-
-    def initialize_anonymous_vertices(vertices)
-      vertices.each do |delegate|
-        add_vertex(delegate: delegate)
-      end
-    end
-
-    def initialize_edges(edges)
-      return if edges.nil?
-
-      edges.each do |vertices|
-        add_edge(*vertices)
-      end
-    end
-
-    def dup_vertices_into(graph, &selector)
-      vertices(&selector).each do |vertex|
-        graph.insert_vertex(vertex.dup_into(graph))
-      end
-    end
-
-    def dup_edges_into(graph)
-      edges.each do |edge|
-        new_edge = edge.dup_into(graph)
-        graph.insert_edge(new_edge) unless new_edge.nil?
-      end
-    end
   end
 end

@@ -8,9 +8,10 @@ module Tangle
     class Graph < Tangle::Graph
       Edge = Tangle::Simple::Edge
 
-      def initialize(**kvargs)
-        @edges ||= Set[]
-        super
+      private
+
+      def initialize_edges
+        @edges = Set[]
       end
     end
   end

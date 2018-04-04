@@ -2,19 +2,21 @@
 
 # Tangle
 
-Tangle aims to untangle your graphs, by providing a set of classes for managing different types of graphs, and mixins for adding specific feature sets, like coloring or graphviz export.
+Tangle aims to untangle your graphs, by providing a set of classes for managing different types of graphs, and mixins for adding specific feature sets.
 
 **Graph types**:
  * SimpleGraph
  * MultiGraph
  * DiGraph
- * ~~DAG~~
+ * DAG
  * ~~Tree~~
 
 **Feature mixins**:
  * Connectedness
  * Ancestry
+ * ~~Vertex ordering~~
  * ~~Coloring~~
+ * ~~GraphViz~~
 
 ## Installation
 
@@ -50,6 +52,34 @@ g.add_edge 'b', 'b'
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`.
+
+### Mixin API
+
+A mixin is a module with optional submodules for each of the classes
+`Graph`, `Vertex`, and `Edge`. If the mixin needs initial state it
+should provide a keyword initializer `#initialize_kwarg_KEYWORD(argument)`,
+that will be called when the object is `#initalize`d with a matching kwarg.
+
+Example:
+```ruby
+module WeightedEdges
+	module Edge
+		def initialize_kwarg_weight(weight)
+			@weight = weight
+		end
+
+		def weight
+			@weight
+		end
+
+		def weight=(new_weight)
+			@weight = new_weight
+		end
+	end
+end
+
+Tangle::Graph.new(mixins: [WeightedEdges])
+```
 
 ## Contributing
 
