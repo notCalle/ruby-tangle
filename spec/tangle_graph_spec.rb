@@ -112,4 +112,18 @@ RSpec.describe Tangle::Graph do
       end
     end
   end
+
+  context 'when subgraphed' do
+    before :context do
+      @mixin = Helpers::TestMixin
+      @graph = Tangle::Graph.new(mixins: [@mixin])
+      @subgraph = @graph.subgraph
+    end
+
+    it 'retains all mixin methods' do
+      @mixin::Graph.public_instance_methods.each do |method|
+        expect(@subgraph).to respond_to method
+      end
+    end
+  end
 end

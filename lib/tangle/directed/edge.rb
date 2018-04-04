@@ -6,11 +6,6 @@ module Tangle
     # An edge in a directed graph
     #
     class Edge < Tangle::Edge
-      def initialize(vertex1, vertex2 = vertex1, **kwargs)
-        @child, @parent = @vertices = [vertex1, vertex2]
-        super
-      end
-
       def parent?(vertex)
         @parent == vertex
       end
@@ -25,6 +20,13 @@ module Tangle
 
       def child(_vertex = nil)
         @child
+      end
+
+      protected
+
+      def with_vertices(vertex1, vertex2 = vertex1)
+        @child, @parent = @vertices = [vertex1, vertex2]
+        self
       end
     end
   end

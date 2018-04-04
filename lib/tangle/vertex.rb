@@ -6,8 +6,7 @@ module Tangle
   #
   # A named vertex in a graph
   #
-  class Vertex < SimpleDelegator
-    include PP::ObjectMixin
+  class Vertex
     include Tangle::Mixin::Initialize
 
     # Create a new vertex
@@ -17,39 +16,29 @@ module Tangle
     # Named arguments:
     #   graph: a Graph or nil for an orphaned vertex
     #   name: anything that's hashable and unique within the graph
-    #   delegate: delegate object for missing methods
     #
     def initialize(graph: nil,
                    name: nil,
-                   delegate: nil,
                    vertex_id: object_id,
                    **kwargs)
-      super(delegate) unless delegate.nil?
-
       @graph = graph
       @name = name
-      @delegate = delegate
       @vertex_id = vertex_id
 
       initialize_mixins(**kwargs)
     end
 
-    # Duplicate a vertex in a new graph, keeping all other contained attributes
-    # End users should probably use Graph#subgrap instead.
+    # Clone a vertex in a new graph, keeping all other contained attributes
+    # End users should probably use Graph#subgraph instead.
     #
-    # dup_into(new_graph) => Vertex
+    # clone_into(new_graph) => Vertex
     #
     # Raises an ArgumentError if graph would remain the same.
     #
-    def dup_into(graph)
+    def clone_into(graph)
       raise ArgumentError if graph == @graph
 
-      Vertex.new(
-        graph:     graph,
-        name:      @name,
-        delegate:  @delegate,
-        vertex_id: @vertex_id
-      )
+      clone.with_graph(graph)
     end
 
     # Return all edges that touch this vertex
@@ -93,7 +82,13 @@ module Tangle
 
     attr_reader :graph
     attr_reader :name
-    attr_reader :delegate
     attr_reader :vertex_id
+
+    protected
+
+    def with_graph(graph)
+      @graph = graph
+      self
+    end
   end
 end
