@@ -12,3 +12,23 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+module Helpers
+  module TestMixin
+    module Graph
+      def mixin_ok?
+        true
+      end
+    end
+    module Vertex
+      def mixin_ok?
+        true
+      end
+    end
+    module Edge
+      def mixin_ok?
+        true
+      end
+    end
+  end
+end
