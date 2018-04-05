@@ -17,14 +17,22 @@ module Helpers
   module TestMixin
     module Graph
       def mixin_ok?
-        true
+        @mixin_ok
+      end
+
+      private
+
+      def initialize_kwarg_mixin_ok(value)
+        @mixin_ok = value
       end
     end
+
     module Vertex
       def mixin_ok?
         true
       end
     end
+
     module Edge
       def mixin_ok?
         true

@@ -29,10 +29,7 @@ module Tangle
 
       def initialize_kwargs(**kwargs)
         kwargs.each do |keyword, argument|
-          initializer = "initialize_kwarg_#{keyword}".to_sym
-          can_init = respond_to?(initializer)
-          raise ArgumentError, "unknown keyword: #{keyword}" unless can_init
-          send initializer, argument
+          send("initialize_kwarg_#{keyword}", argument)
         end
       end
     end
