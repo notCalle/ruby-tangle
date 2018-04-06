@@ -50,9 +50,9 @@ module Tangle
     # constraints.
     #
     def initialize(mixins: self.class::DEFAULT_MIXINS, **kwargs)
-      initialize_mixins(mixins, **kwargs)
       initialize_vertices
       initialize_edges
+      initialize_mixins(mixins, **kwargs)
     end
 
     # Get all edges.
