@@ -12,12 +12,14 @@ module Tangle
       module Graph
         include Tangle::Mixin::Connectedness::Graph
 
-        def ancestor_subgraph(vertex)
-          subgraph { |other| vertex.ancestor?(other) }
+        def ancestor_subgraph(vertex, &selector)
+          vertex = get_vertex(vertex) unless vertex.is_a? Vertex
+          clone.with_vertices(vertex.ancestors(&selector)).with_edges(edges)
         end
 
-        def descendant_subgraph(vertex)
-          subgraph { |other| vertex.descendant?(other) }
+        def descendant_subgraph(vertex, &selector)
+          vertex = get_vertex(vertex) unless vertex.is_a? Vertex
+          clone.with_vertices(vertex.descendants(&selector)).with_edges(edges)
         end
       end
 
