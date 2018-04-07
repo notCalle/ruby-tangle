@@ -46,7 +46,7 @@ module Tangle
     def edges
       return [] if @graph.nil?
 
-      @graph.edges { |edge| edge.include? self }
+      @graph.edges(vertex: self)
     end
 
     # Return the set of adjacent vertices

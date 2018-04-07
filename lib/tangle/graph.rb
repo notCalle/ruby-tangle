@@ -59,11 +59,12 @@ module Tangle
     #
     # edges => Array
     #
-    def edges(&selector)
+    def edges(vertex: nil, &selector)
+      edges = vertex.nil? ? @edges : @edges_by_vertex[vertex]
       if block_given?
-        @edges.select(&selector)
+        edges.select(&selector)
       else
-        @edges.to_a
+        edges.to_a
       end
     end
 
