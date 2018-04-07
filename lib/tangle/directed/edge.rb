@@ -24,9 +24,10 @@ module Tangle
 
       protected
 
-      def with_vertices(vertex1, vertex2 = vertex1)
-        @child, @parent = @vertices = [vertex1, vertex2]
-        self
+      def with_vertices(child, parent = child)
+        @child = child
+        @parent = parent
+        super
       end
     end
   end

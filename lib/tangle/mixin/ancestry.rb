@@ -12,12 +12,14 @@ module Tangle
       module Graph
         include Tangle::Mixin::Connectedness::Graph
 
-        def ancestor_subgraph(vertex)
-          subgraph { |other| vertex.ancestor?(other) }
+        def ancestor_subgraph(vertex, &selector)
+          vertex = get_vertex(vertex) unless vertex.is_a? Vertex
+          clone.with_vertices(vertex.ancestors(&selector)).with_edges(edges)
         end
 
-        def descendant_subgraph(vertex)
-          subgraph { |other| vertex.descendant?(other) }
+        def descendant_subgraph(vertex, &selector)
+          vertex = get_vertex(vertex) unless vertex.is_a? Vertex
+          clone.with_vertices(vertex.descendants(&selector)).with_edges(edges)
         end
       end
 
@@ -28,11 +30,17 @@ module Tangle
         include Tangle::Mixin::Connectedness::Vertex
 
         def parent_edges
-          @graph.edges { |edge| edge.child?(self) }
+          @graph.edges(vertex: self) { |edge| edge.child?(self) }
         end
 
         def parents
           neighbours(parent_edges)
+        end
+
+        def ancestors
+          result = [self] + parents.flat_map(&:ancestors)
+          return result unless block_given?
+          result.select(&:yield)
         end
 
         def parent?(other)
@@ -44,7 +52,7 @@ module Tangle
         end
 
         def child_edges
-          @graph.edges { |edge| edge.parent?(self) }
+          @graph.edges(vertex: self) { |edge| edge.parent?(self) }
         end
 
         def children
@@ -53,6 +61,12 @@ module Tangle
 
         def child?(other)
           @graph.edges.any? { |edge| edge.parent?(self) && edge.child?(other) }
+        end
+
+        def descendants
+          result = [self] + children.flat_map(&:descendants)
+          return result unless block_given?
+          result.select(&:yield)
         end
 
         def descendant?(other)

@@ -8,11 +8,11 @@ module Tangle
     def initialize_vertices
       @vertices_by_id = {}
       @vertices_by_name = {}
+      @edges_by_vertex = {}
     end
 
     def initialize_edges
       @edges = []
-      @edges_by_vertex = {}
     end
 
     def clone_vertices_into(graph, &selector)
