@@ -11,8 +11,7 @@ module Tangle
 
         def validate_edge
           super
-          raise CyclicError if @parent.ancestor?(@child) &&
-                               @child.descendant?(@parent)
+          raise CyclicError if @parent.ancestor?(@child)
         end
       end
     end
