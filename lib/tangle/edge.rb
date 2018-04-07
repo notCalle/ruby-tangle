@@ -16,7 +16,8 @@ module Tangle
     #
     # End users should probably use Graph#add_edge instead.
     #
-    def initialize(vertex1, vertex2 = vertex1, graph: nil, **kwargs)
+    def initialize(vertex1, vertex2 = vertex1, graph: nil, name: nil, **kwargs)
+      @name = name
       with_graph(graph)
       with_vertices(vertex1, vertex2)
 
