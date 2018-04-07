@@ -131,5 +131,10 @@ module Tangle
     end
 
     attr_reader :mixins
+
+    def to_s
+      "#<#{self.class}: #{vertices.count} vertices, #{edges.count} edges>"
+    end
+    alias inspect to_s
   end
 end

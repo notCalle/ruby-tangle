@@ -84,6 +84,16 @@ module Tangle
     attr_reader :name
     attr_reader :vertex_id
 
+    def to_s
+      values = {
+        class: self.class,
+        ident: name.nil? ? format('0x%x', vertex_id) : "'#{name}'",
+        n_edges: edges.count
+      }
+      format('#<%<class>s:%<ident>s: %<n_edges>d edges>', values)
+    end
+    alias inspect to_s
+
     protected
 
     def with_graph(graph)
