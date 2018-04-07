@@ -20,6 +20,10 @@ module Tangle
       raise ArgumentError unless edge.graph.eql?(self)
 
       @edges << edge
+      edge.vertices.each do |vertex|
+        @edges_by_vertex[vertex] ||= []
+        @edges_by_vertex[vertex] << edge
+      end
       edge
     end
 
