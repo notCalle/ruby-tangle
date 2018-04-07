@@ -40,7 +40,7 @@ module Tangle
         end
 
         def ancestor?(other)
-          connected?(other, test_method: :parent?)
+          other == self || parents.any? { |parent| parent.ancestor?(other) }
         end
 
         def child_edges
@@ -56,7 +56,7 @@ module Tangle
         end
 
         def descendant?(other)
-          connected?(other, test_method: :child?)
+          other == self || children.any? { |child| child.descendant?(other) }
         end
       end
     end
