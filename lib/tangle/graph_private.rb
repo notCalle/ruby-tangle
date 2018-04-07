@@ -12,6 +12,7 @@ module Tangle
 
     def initialize_edges
       @edges = []
+      @edges_by_vertex = {}
     end
 
     def clone_vertices_into(graph, &selector)
