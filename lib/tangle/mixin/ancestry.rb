@@ -35,6 +35,12 @@ module Tangle
           neighbours(parent_edges)
         end
 
+        def ancestors
+          result = [self] + parents.flat_map(&:ancestors)
+          return result unless block_given?
+          result.select(&:yield)
+        end
+
         def parent?(other)
           @graph.edges.any? { |edge| edge.child?(self) && edge.parent?(other) }
         end
@@ -53,6 +59,12 @@ module Tangle
 
         def child?(other)
           @graph.edges.any? { |edge| edge.parent?(self) && edge.child?(other) }
+        end
+
+        def descendants
+          result = [self] + children.flat_map(&:descendants)
+          return result unless block_given?
+          result.select(&:yield)
         end
 
         def descendant?(other)
