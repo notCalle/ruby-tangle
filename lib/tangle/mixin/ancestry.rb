@@ -28,7 +28,7 @@ module Tangle
         include Tangle::Mixin::Connectedness::Vertex
 
         def parent_edges
-          @graph.edges { |edge| edge.child?(self) }
+          @graph.edges(vertex: self) { |edge| edge.child?(self) }
         end
 
         def parents
@@ -44,7 +44,7 @@ module Tangle
         end
 
         def child_edges
-          @graph.edges { |edge| edge.parent?(self) }
+          @graph.edges(vertex: self) { |edge| edge.parent?(self) }
         end
 
         def children
