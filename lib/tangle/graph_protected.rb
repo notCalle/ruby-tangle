@@ -10,6 +10,7 @@ module Tangle
     def insert_vertex(vertex)
       raise ArgumentError unless vertex.graph.eql?(self)
 
+      @edges_by_vertex[vertex] = []
       @vertices_by_name[vertex.name] = vertex unless vertex.name.nil?
       @vertices_by_id[vertex.vertex_id] = vertex
     end
@@ -20,6 +21,9 @@ module Tangle
       raise ArgumentError unless edge.graph.eql?(self)
 
       @edges << edge
+      edge.vertices.each do |vertex|
+        @edges_by_vertex[vertex] << edge
+      end
       edge
     end
 

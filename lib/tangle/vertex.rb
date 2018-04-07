@@ -46,7 +46,7 @@ module Tangle
     def edges
       return [] if @graph.nil?
 
-      @graph.edges { |edge| edge.include? self }
+      @graph.edges(vertex: self)
     end
 
     # Return the set of adjacent vertices
@@ -83,6 +83,16 @@ module Tangle
     attr_reader :graph
     attr_reader :name
     attr_reader :vertex_id
+
+    def to_s
+      values = {
+        class: self.class,
+        ident: name.nil? ? format('0x%x', vertex_id) : "'#{name}'",
+        n_edges: edges.count
+      }
+      format('#<%<class>s:%<ident>s: %<n_edges>d edges>', values)
+    end
+    alias inspect to_s
 
     protected
 

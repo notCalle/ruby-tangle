@@ -8,6 +8,7 @@ module Tangle
     def initialize_vertices
       @vertices_by_id = {}
       @vertices_by_name = {}
+      @edges_by_vertex = {}
     end
 
     def initialize_edges
