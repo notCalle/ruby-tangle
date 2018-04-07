@@ -6,8 +6,10 @@ RSpec.describe Tangle::Directed::Acyclic::Edge do
     @graph.add_vertex name: 'a'
     @graph.add_vertex name: 'b'
     @graph.add_vertex name: 'c'
+    @graph.add_vertex name: 'd'
     @edge = @graph.add_edge 'a', 'b'
     @graph.add_edge 'b', 'c'
+    @graph.add_edge 'a', 'd'
   end
 
   it 'is a specialization of a directed edge' do
@@ -21,6 +23,7 @@ RSpec.describe Tangle::Directed::Acyclic::Edge do
 
   it 'allows multiple paths to an ancestor' do
     expect { @graph.add_edge('a', 'c') }.not_to raise_error
+    expect { @graph.add_edge('b', 'd') }.not_to raise_error
   end
 
   it 'allows multiedges' do
