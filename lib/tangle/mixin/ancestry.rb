@@ -28,42 +28,18 @@ module Tangle
       # Mixins for adding ancestry relations to vertices in a digraph
       #
       module Vertex
-        def parent_edges
-          @graph.edges(vertex: self) { |edge| edge.child?(self) }
-        end
-
-        def parents
-          neighbours(parent_edges)
-        end
-
         def ancestors
-          result = [self] + parents.flat_map(&:ancestors)
+          result = Set[self] + parents.flat_map(&:ancestors)
           return result unless block_given?
           result.select(&:yield)
-        end
-
-        def parent?(other)
-          @graph.edges.any? { |edge| edge.child?(self) && edge.parent?(other) }
         end
 
         def ancestor?(other)
           other == self || parents.any? { |parent| parent.ancestor?(other) }
         end
 
-        def child_edges
-          @graph.edges(vertex: self) { |edge| edge.parent?(self) }
-        end
-
-        def children
-          neighbours(child_edges)
-        end
-
-        def child?(other)
-          @graph.edges.any? { |edge| edge.parent?(self) && edge.child?(other) }
-        end
-
         def descendants
-          result = [self] + children.flat_map(&:descendants)
+          result = Set[self] + children.flat_map(&:descendants)
           return result unless block_given?
           result.select(&:yield)
         end
