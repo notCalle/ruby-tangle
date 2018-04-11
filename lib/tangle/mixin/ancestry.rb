@@ -13,14 +13,31 @@ module Tangle
       # Mixins for adding ancestry relations to a digraph
       #
       module Graph
+        # THe ancestor_subgraph simply contains all the ancestors,
+        # and the vertex itself
         def ancestor_subgraph(vertex, &selector)
           vertex = get_vertex(vertex) unless vertex.is_a? Vertex
           clone.with_vertices(vertex.ancestors(&selector)).with_edges(edges)
         end
 
+        # The descendant_subgraph contains all the descendats,
+        # and the vertex itself
         def descendant_subgraph(vertex, &selector)
           vertex = get_vertex(vertex) unless vertex.is_a? Vertex
           clone.with_vertices(vertex.descendants(&selector)).with_edges(edges)
+        end
+
+        # The dependant_subgraph contains all the descendants,
+        # and all their ancestors, because they depend on them.
+        def dependant_subgraph(vertex, &selector)
+          vertex = get_vertex(vertex) unless vertex.is_a? Vertex
+          vertices = Set[]
+
+          vertex.descendants(&selector).each do |descendant|
+            vertices |= descendant.ancestors
+          end
+
+          clone.with_vertices(vertices).with_edges(edges)
         end
       end
 
