@@ -1,4 +1,5 @@
-require 'tangle/mixin/connectedness'
+require 'tangle/mixin/relations'
+require 'set'
 
 module Tangle
   module Mixin

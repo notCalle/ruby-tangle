@@ -1,4 +1,5 @@
 require 'tangle/mixin'
+require 'tangle/mixin/connectedness'
 require 'tangle/vertex'
 require 'tangle/edge'
 require 'tangle/graph_private'

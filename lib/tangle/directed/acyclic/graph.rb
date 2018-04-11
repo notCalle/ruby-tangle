@@ -1,5 +1,6 @@
 require 'tangle/directed/graph'
 require 'tangle/directed/acyclic/edge'
+require 'tangle/mixin/ancestry'
 
 module Tangle
   module Directed
