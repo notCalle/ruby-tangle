@@ -7,12 +7,12 @@ module Tangle
     # Mixin for adding ancestry features
     #
     module Ancestry
+      MIXINS = (Tangle::Mixin::Relations::MIXINS +
+                [Tangle::Mixin::Ancestry]).freeze
       #
       # Mixins for adding ancestry relations to a digraph
       #
       module Graph
-        include Tangle::Mixin::Connectedness::Graph
-
         def ancestor_subgraph(vertex, &selector)
           vertex = get_vertex(vertex) unless vertex.is_a? Vertex
           clone.with_vertices(vertex.ancestors(&selector)).with_edges(edges)
@@ -28,8 +28,6 @@ module Tangle
       # Mixins for adding ancestry relations to vertices in a digraph
       #
       module Vertex
-        include Tangle::Mixin::Connectedness::Vertex
-
         def parent_edges
           @graph.edges(vertex: self) { |edge| edge.child?(self) }
         end

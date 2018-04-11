@@ -14,7 +14,7 @@ module Tangle
     include Tangle::GraphProtected
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
-    DEFAULT_MIXINS = [Tangle::Mixin::Connectedness].freeze
+    DEFAULT_MIXINS = Tangle::Mixin::Connectedness::MIXINS
 
     # Initialize a new graph, preloading it with vertices and edges
     #

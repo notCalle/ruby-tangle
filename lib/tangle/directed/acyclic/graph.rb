@@ -9,6 +9,7 @@ module Tangle
       # A directed acyclic graph
       class Graph < Tangle::Directed::Graph
         Edge = Tangle::Directed::Acyclic::Edge
+        DEFAULT_MIXINS = Tangle::Mixin::Ancestry::MIXINS
       end
     end
   end

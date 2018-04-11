@@ -8,7 +8,7 @@ module Tangle
     # A directed graph
     class Graph < Tangle::Graph
       Edge = Tangle::Directed::Edge
-      DEFAULT_MIXINS = [Tangle::Mixin::Ancestry].freeze
+      DEFAULT_MIXINS = Tangle::Mixin::Relations::MIXINS
     end
   end
 end
