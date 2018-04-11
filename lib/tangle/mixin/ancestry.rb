@@ -31,13 +31,13 @@ module Tangle
         # and all their ancestors, because they depend on them.
         def dependant_subgraph(vertex, &selector)
           vertex = get_vertex(vertex) unless vertex.is_a? Vertex
-          vertices = Set[]
+          dependant_vertices = []
 
           vertex.descendants(&selector).each do |descendant|
-            vertices |= descendant.ancestors
+            dependant_vertices += descendant.ancestors
           end
 
-          clone.with_vertices(vertices).with_edges(edges)
+          clone.with_vertices(dependant_vertices.uniq).with_edges(edges)
         end
       end
 
@@ -46,7 +46,7 @@ module Tangle
       #
       module Vertex
         def ancestors
-          result = Set[self] + parents.flat_map(&:ancestors)
+          result = [self] + parents.flat_map(&:ancestors).uniq
           return result unless block_given?
           result.select(&:yield)
         end
@@ -56,7 +56,7 @@ module Tangle
         end
 
         def descendants
-          result = Set[self] + children.flat_map(&:descendants)
+          result = [self] + children.flat_map(&:descendants).uniq
           return result unless block_given?
           result.select(&:yield)
         end
