@@ -4,6 +4,7 @@ module Tangle
     # Mixins for adding connectedness features
     #
     module Connectedness
+      MIXINS = [Tangle::Mixin::Connectedness].freeze
       #
       # Mixin for adding connectedness to a graph
       #

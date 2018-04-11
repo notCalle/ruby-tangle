@@ -1,4 +1,5 @@
-require 'tangle/mixin/connectedness'
+require 'tangle/mixin/relations'
+require 'set'
 
 module Tangle
   module Mixin
@@ -6,20 +7,37 @@ module Tangle
     # Mixin for adding ancestry features
     #
     module Ancestry
+      MIXINS = (Tangle::Mixin::Relations::MIXINS +
+                [Tangle::Mixin::Ancestry]).freeze
       #
       # Mixins for adding ancestry relations to a digraph
       #
       module Graph
-        include Tangle::Mixin::Connectedness::Graph
-
+        # THe ancestor_subgraph simply contains all the ancestors,
+        # and the vertex itself
         def ancestor_subgraph(vertex, &selector)
           vertex = get_vertex(vertex) unless vertex.is_a? Vertex
           clone.with_vertices(vertex.ancestors(&selector)).with_edges(edges)
         end
 
+        # The descendant_subgraph contains all the descendats,
+        # and the vertex itself
         def descendant_subgraph(vertex, &selector)
           vertex = get_vertex(vertex) unless vertex.is_a? Vertex
           clone.with_vertices(vertex.descendants(&selector)).with_edges(edges)
+        end
+
+        # The dependant_subgraph contains all the descendants,
+        # and all their ancestors, because they depend on them.
+        def dependant_subgraph(vertex, &selector)
+          vertex = get_vertex(vertex) unless vertex.is_a? Vertex
+          vertices = Set[]
+
+          vertex.descendants(&selector).each do |descendant|
+            vertices |= descendant.ancestors
+          end
+
+          clone.with_vertices(vertices).with_edges(edges)
         end
       end
 
@@ -27,44 +45,18 @@ module Tangle
       # Mixins for adding ancestry relations to vertices in a digraph
       #
       module Vertex
-        include Tangle::Mixin::Connectedness::Vertex
-
-        def parent_edges
-          @graph.edges(vertex: self) { |edge| edge.child?(self) }
-        end
-
-        def parents
-          neighbours(parent_edges)
-        end
-
         def ancestors
-          result = [self] + parents.flat_map(&:ancestors)
+          result = Set[self] + parents.flat_map(&:ancestors)
           return result unless block_given?
           result.select(&:yield)
-        end
-
-        def parent?(other)
-          @graph.edges.any? { |edge| edge.child?(self) && edge.parent?(other) }
         end
 
         def ancestor?(other)
           other == self || parents.any? { |parent| parent.ancestor?(other) }
         end
 
-        def child_edges
-          @graph.edges(vertex: self) { |edge| edge.parent?(self) }
-        end
-
-        def children
-          neighbours(child_edges)
-        end
-
-        def child?(other)
-          @graph.edges.any? { |edge| edge.parent?(self) && edge.child?(other) }
-        end
-
         def descendants
-          result = [self] + children.flat_map(&:descendants)
+          result = Set[self] + children.flat_map(&:descendants)
           return result unless block_given?
           result.select(&:yield)
         end

@@ -105,6 +105,17 @@ RSpec.describe Tangle::Vertex do
       expect(@vertex_c.child?(@vertex_b)).to be true
       expect(@vertex_c.child?(@vertex_a)).to be false
     end
+  end
+
+  context 'when in a directed acyclic graph' do
+    before :context do
+      @graph = Tangle::DAG.new
+      @vertex_a = @graph.add_vertex(name: 'a')
+      @vertex_b = @graph.add_vertex(name: 'b')
+      @graph.add_edge 'a', 'b'
+      @vertex_c = @graph.add_vertex(name: 'c')
+      @graph.add_edge 'b', 'c'
+    end
 
     it 'can test ancestry' do
       expect(@vertex_a).to respond_to :ancestor?

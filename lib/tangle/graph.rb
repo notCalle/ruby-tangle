@@ -1,4 +1,5 @@
 require 'tangle/mixin'
+require 'tangle/mixin/connectedness'
 require 'tangle/vertex'
 require 'tangle/edge'
 require 'tangle/graph_private'
@@ -13,7 +14,7 @@ module Tangle
     include Tangle::GraphProtected
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
-    DEFAULT_MIXINS = [Tangle::Mixin::Connectedness].freeze
+    DEFAULT_MIXINS = Tangle::Mixin::Connectedness::MIXINS
 
     # Initialize a new graph, preloading it with vertices and edges
     #
