@@ -9,96 +9,18 @@ module Tangle
   class Vertex
     include Tangle::Mixin::Initialize
 
+    attr_reader :name
+
     # Create a new vertex
     #
     # Vertex.new(...) => Vertex
     #
     # Named arguments:
-    #   graph: a Graph or nil for an orphaned vertex
     #   name: anything that's hashable and unique within the graph
-    #
-    def initialize(graph: nil,
-                   name: nil,
-                   vertex_id: object_id,
-                   **kwargs)
-      @graph = graph
+    def initialize(name: nil, **kwargs)
       @name = name
-      @vertex_id = vertex_id
 
       initialize_mixins(**kwargs)
-    end
-
-    # Clone a vertex in a new graph, keeping all other contained attributes
-    # End users should probably use Graph#subgraph instead.
-    #
-    # clone_into(new_graph) => Vertex
-    #
-    # Raises an ArgumentError if graph would remain the same.
-    #
-    def clone_into(graph)
-      raise ArgumentError if graph == @graph
-
-      clone.with_graph(graph)
-    end
-
-    # Return all edges that touch this vertex
-    #
-    def edges
-      return [] if @graph.nil?
-
-      @graph.edges(vertex: self)
-    end
-
-    # Return the set of adjacent vertices
-    #
-    def neighbours(included = edges)
-      Set.new(included.map { |edge| edge.walk(self) })
-    end
-
-    # If two vertices have the same vertex_id, they have the same value
-    #
-    def ==(other)
-      @vertex_id == other.vertex_id
-    end
-
-    # If two vertices have the same vertex_id, they have the same value
-    #
-    def !=(other)
-      @vertex_id != other.vertex_id
-    end
-
-    # If two vertices have the same object_id, they are identical
-    #
-    def eql?(other)
-      @object_id == other.object_id
-    end
-
-    # Two vertices are adjacent if there is an edge between them
-    #
-    def adjacent?(other)
-      raise GraphError unless @graph == other.graph
-      edges.any? { |edge| edge.walk(self) == other }
-    end
-
-    attr_reader :graph
-    attr_reader :name
-    attr_reader :vertex_id
-
-    def to_s
-      values = {
-        class: self.class,
-        ident: name.nil? ? format('0x%x', vertex_id) : "'#{name}'",
-        n_edges: edges.count
-      }
-      format('#<%<class>s:%<ident>s: %<n_edges>d edges>', values)
-    end
-    alias inspect to_s
-
-    protected
-
-    def with_graph(graph)
-      @graph = graph
-      self
     end
   end
 end

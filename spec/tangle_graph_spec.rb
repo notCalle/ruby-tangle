@@ -22,7 +22,7 @@ RSpec.describe Tangle::Graph do
   end
 
   it 'can add new edges' do
-    expect(@graph.add_edge(:a, :a)).to be_an Tangle::Edge
+    expect(@graph.add_edge(:a, :a)).to be_a Tangle::Edge
   end
 
   it 'can test (dis)connectedness' do
@@ -124,6 +124,55 @@ RSpec.describe Tangle::Graph do
       @mixin::Graph.public_instance_methods.each do |method|
         expect(@subgraph).to respond_to method
       end
+    end
+  end
+
+  context 'given a vertex' do
+    before :context do
+      @graph = Tangle::Graph.new
+      @vertex_a = @graph.add_vertex(name: 'a')
+      @vertex_b = @graph.add_vertex(name: 'b')
+      @graph.add_edge 'a', 'b'
+      @vertex_c = @graph.add_vertex(name: 'c')
+      @vertex_d = @graph.add_vertex(name: 'd')
+      @graph.add_edge 'b', 'd'
+    end
+
+    it 'can find adjacent vertices' do
+      expect(@graph).to respond_to :adjacent
+    end
+
+    it 'only includes adjacent vertices' do
+      expect(@graph.adjacent(@vertex_a)).to include @vertex_b
+      expect(@graph.adjacent(@vertex_a)).not_to include @vertex_c
+    end
+
+    it 'can test adjacency' do
+      expect(@graph).to respond_to :adjacent?
+    end
+
+    it 'is only adjacent to its neighbours' do
+      expect(@graph.adjacent?(@vertex_a, @vertex_b)).to be true
+      expect(@graph.adjacent?(@vertex_a, @vertex_c)).to be false
+    end
+
+    it 'can test connectivity' do
+      expect(@graph).to respond_to :connected?
+    end
+
+    it 'is connected to itself' do
+      expect(@graph.connected?(@vertex_a, @vertex_a)).to be true
+    end
+
+    it 'is connected to adjacent vertices' do
+      expect(@graph.connected?(@vertex_a, @vertex_b)).to be true
+    end
+
+    it 'is connected through transitive adjacency' do
+      expect(@graph.adjacent?(@vertex_a, @vertex_d)).to be false
+      expect(@graph.adjacent?(@vertex_a, @vertex_b)).to be true
+      expect(@graph.adjacent?(@vertex_b, @vertex_d)).to be true
+      expect(@graph.connected?(@vertex_a, @vertex_d)).to be true
     end
   end
 end

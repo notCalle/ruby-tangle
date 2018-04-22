@@ -2,18 +2,19 @@ require 'tangle/mixin'
 require 'tangle/mixin/connectedness'
 require 'tangle/vertex'
 require 'tangle/edge'
-require 'tangle/graph_private'
-require 'tangle/graph_protected'
+require 'tangle/graph_vertices'
+require 'tangle/graph_edges'
 
 module Tangle
   #
   # Base class for all kinds of graphs
   #
   class Graph
-    include Tangle::GraphPrivate
-    include Tangle::GraphProtected
+    include Tangle::GraphVertices
+    include Tangle::GraphEdges
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
+    Vertex = Tangle::Vertex
     DEFAULT_MIXINS = Tangle::Mixin::Connectedness::MIXINS
 
     # Initialize a new graph, preloading it with vertices and edges
@@ -56,70 +57,6 @@ module Tangle
       initialize_mixins(mixins, **kwargs)
     end
 
-    # Get all edges.
-    #
-    # edges => Array
-    #
-    def edges(vertex: nil, &selector)
-      edges = vertex.nil? ? @edges : @edges_by_vertex[vertex]
-      if block_given?
-        edges.select(&selector)
-      else
-        edges.to_a
-      end
-    end
-
-    # Add a new edge to the graph
-    #
-    # add_edge(vtx1, vtx2, ...) => Edge
-    #
-    def add_edge(*vertices, **kvargs)
-      vertices = vertices.map { |v| get_vertex(v) }
-      insert_edge(self.class::Edge.new(*vertices, graph: self, **kvargs))
-    end
-
-    # Get all vertices.
-    #
-    # vertices => Array
-    #
-    def vertices
-      if block_given?
-        @vertices_by_id.select { |_, vertex| yield(vertex) }
-      else
-        @vertices_by_id
-      end.values
-    end
-
-    # Add a new vertex to the graph
-    #
-    # add_vertex(...) => Vertex
-    #
-    # Optional named arguments:
-    #   name: unique name or label for vertex
-    #
-    def add_vertex(**kvargs)
-      insert_vertex(Vertex.new(graph: self, **kvargs))
-    end
-
-    def add_vertices(vertices)
-      case vertices
-      when Hash
-        vertices.each { |name, kwargs| add_vertex(name: name, **kwargs) }
-      else
-        vertices.each { |kwargs| add_vertex(**kwargs) }
-      end
-    end
-
-    def get_vertex(name_or_vertex)
-      case name_or_vertex
-      when Vertex
-        name_or_vertex
-      else
-        @vertices_by_name[name_or_vertex] ||
-          @vertices_by_id.fetch(name_or_vertex)
-      end
-    end
-
     # Return a subgraph, optionally filtered by a vertex selector block
     #
     # subgraph => Graph
@@ -127,11 +64,16 @@ module Tangle
     #
     # Unless a selector is provided, the subgraph contains the entire graph.
     #
-    def subgraph(&selector)
-      clone.with_vertices(vertices(&selector)).with_edges(edges)
+    def subgraph(included = nil)
+      included ||= vertices
+      result = clone
+      vertices.each do |vertex|
+        result.remove_vertex(vertex) unless included.include?(vertex)
+        next unless block_given?
+        result.remove_vertex(vertex) unless yield(vertex)
+      end
+      result
     end
-
-    attr_reader :mixins
 
     def to_s
       "#<#{self.class}: #{vertices.count} vertices, #{edges.count} edges>"

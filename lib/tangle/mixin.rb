@@ -4,6 +4,8 @@ module Tangle
     # Mixin to initialize the dynamic mixin system
     #
     module Initialize
+      attr_reader :mixins
+
       private
 
       def initialize_mixins(mixins = nil, **kwargs)

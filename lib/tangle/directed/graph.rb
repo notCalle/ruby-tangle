@@ -1,6 +1,6 @@
 require 'tangle/graph'
 require 'tangle/directed/edge'
-require 'tangle/mixin/relations'
+require 'tangle/mixin/ancestry'
 
 module Tangle
   module Directed
@@ -8,7 +8,7 @@ module Tangle
     # A directed graph
     class Graph < Tangle::Graph
       Edge = Tangle::Directed::Edge
-      DEFAULT_MIXINS = Tangle::Mixin::Relations::MIXINS
+      DEFAULT_MIXINS = Tangle::Mixin::Ancestry::MIXINS
     end
   end
 end
