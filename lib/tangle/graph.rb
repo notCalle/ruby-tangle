@@ -54,7 +54,7 @@ module Tangle
     def initialize(mixins: self.class::DEFAULT_MIXINS, **kwargs)
       initialize_vertices
       initialize_edges
-      initialize_mixins(mixins, **kwargs)
+      initialize_mixins(mixins: mixins, **kwargs)
     end
 
     # Return a subgraph, optionally filtered by a vertex selector block

@@ -19,7 +19,7 @@ module Tangle
     #
     def add_edge(*vertices, **kvargs)
       vertices = get_vertices(vertices)
-      insert_edge(self.class::Edge.new(*vertices, **kvargs))
+      insert_edge(self.class::Edge.new(*vertices, mixins: @mixins, **kvargs))
     end
 
     # Remove an edge from the graph
