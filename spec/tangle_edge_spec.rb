@@ -20,8 +20,8 @@ RSpec.describe Tangle::Edge do
     expect(@named_edge.name).to eq edge_name
   end
 
-  it 'connects vertices' do
-    expect(@edge).to respond_to :vertices
+  it 'can enumerate vertices' do
+    expect(@edge).to respond_to :each_vertex
     [@vertex1, @vertex2].each do |vertex|
       expect(@edge).to include vertex
     end
@@ -31,21 +31,5 @@ RSpec.describe Tangle::Edge do
     expect(@edge).to respond_to :walk
     expect(@edge.walk(@vertex1)).to be @vertex2
     expect(@edge.walk(@vertex2)).to be @vertex1
-  end
-
-  context 'when cloned into a subgraph' do
-    before :context do
-      @mixin = Helpers::TestMixin
-      @graph = Tangle::Graph[{ a: {} }, [%i[a a]], mixins: [@mixin]]
-      @subgraph = @graph.subgraph
-    end
-
-    it 'retains all mixin methods' do
-      @subgraph.edges.each do |edge|
-        @mixin::Edge.public_instance_methods.each do |method|
-          expect(edge).to respond_to method
-        end
-      end
-    end
   end
 end
