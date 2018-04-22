@@ -1,6 +1,4 @@
 require 'tangle/directed/graph'
-require 'tangle/directed/acyclic/edge'
-require 'tangle/mixin/ancestry'
 
 module Tangle
   module Directed
@@ -8,8 +6,13 @@ module Tangle
       #
       # A directed acyclic graph
       class Graph < Tangle::Directed::Graph
-        Edge = Tangle::Directed::Acyclic::Edge
-        DEFAULT_MIXINS = Tangle::Mixin::Ancestry::MIXINS
+        protected
+
+        def insert_edge(edge)
+          raise CyclicError if ancestor?(edge.parent, edge.child) ||
+                               descendant?(edge.child, edge.parent)
+          super
+        end
       end
     end
   end
