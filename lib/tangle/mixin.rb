@@ -8,20 +8,16 @@ module Tangle
 
       private
 
-      def initialize_mixins(mixins = nil, **kwargs)
-        case klass = self.class.name[/[^:]+$/].to_sym
-        when :Graph
-          @mixins = mixins
-        else
-          mixins = @graph.mixins unless @graph.nil?
-        end
+      def initialize_mixins(mixins: nil, **kwargs)
+        @mixins = mixins
 
-        extend_with_mixins(klass, mixins) unless mixins.nil?
+        extend_with_mixins unless @mixins.nil?
         initialize_kwargs(**kwargs) unless kwargs.empty?
       end
 
-      def extend_with_mixins(klass, mixins)
-        mixins.each do |mixin|
+      def extend_with_mixins
+        klass = self.class.name[/[^:]+$/].to_sym
+        @mixins.each do |mixin|
           extend(mixin.const_get(klass)) if mixin.const_defined?(klass)
         end
       end

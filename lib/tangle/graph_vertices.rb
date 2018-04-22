@@ -11,7 +11,7 @@ module Tangle
     #
     # See +Vertex.new+ for valid kwargs
     def add_vertex(**kwargs)
-      insert_vertex(Vertex.new(**kwargs))
+      insert_vertex(Vertex.new(mixins: @mixins, **kwargs))
     end
 
     # Add multiple vertices
