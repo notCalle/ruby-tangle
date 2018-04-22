@@ -9,13 +9,26 @@ module Tangle
       # Mixin for adding connectedness to a graph
       #
       module Graph
+        # Two vertices are adjacent if there is an edge between them
+        def adjacent?(vertex, other)
+          vertex, other = get_vertices(vertex, other)
+          edges(vertex).any? { |edge| edge[vertex] == other }
+        end
+
+        # Return the set of adjacent vertices
+        def adjacent(vertex)
+          vertex = get_vertex(vertex)
+          Set.new(edges(vertex).map { |edge| edge.walk(vertex) })
+        end
+
         # Get the largest connected subgraph for a vertex.
         # Also aliased as :component and :connected_component
         #
         # connected_subgraph(vertex) => Graph
         #
         def connected_subgraph(vertex)
-          subgraph { |other| vertex.connected?(other) }
+          vertex = get_vertex(vertex)
+          subgraph { |other| connected_vertices?(vertex, other) }
         end
         alias component connected_subgraph
         alias connected_component connected_subgraph
@@ -24,51 +37,34 @@ module Tangle
         # left after removing the connected subgraph.
         #
         def disconnected_subgraph(vertex)
-          subgraph { |other| !vertex.connected?(other) }
+          vertex = get_vertex(vertex)
+          subgraph { |other| !connected_vertices?(vertex, other) }
         end
 
         # A graph is connected if all vertices are connected to all vertices
         # An empty graph is disconnected.
         #
-        def connected?
-          return false if vertices.empty?
+        def connected?(*tested_vertices)
+          tested_vertices = vertices.to_a if tested_vertices.empty?
+          return false if tested_vertices.empty?
 
-          vertices.combination(2).all? do |pair|
-            this, that = pair.to_a
-            this.connected?(that)
+          tested_vertices.combination(2).all? do |pair|
+            this, that = get_vertices(pair.to_a)
+            reachable(this).any? { |other| other == that }
           end
         end
 
         # A graph is disconnected if any vertex is not connected to all other.
         # An empty graph is disconnected.
         #
-        def disconnected?
-          !connected?
-        end
-      end
-
-      #
-      # Mixin for adding connectedness to a vertex
-      #
-      module Vertex
-        # Two vertices are connected if there is a path between them,
-        # and a vertex is connected to itself.
-        #
-        def connected?(other)
-          raise GraphError unless @graph == other.graph
-          return true if self == other
-
-          connected_excluding?(other, Set[self])
+        def disconnected?(*tested_vertices)
+          !connected?(*tested_vertices)
         end
 
-        protected
-
-        def connected_excluding?(other, history)
-          return true if other.adjacent?(self)
-
-          (neighbours - history).any? do |vertex|
-            vertex.connected_excluding?(other, history << self)
-          end
+        # Return a breadth-first Enumerator for all reachable vertices,
+        # by transitive adjacency.
+        def reachable(start_vertex)
+          vertex_enumerator(start_vertex, :adjacent)
         end
       end
     end
