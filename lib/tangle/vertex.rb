@@ -22,5 +22,11 @@ module Tangle
 
       initialize_mixins(**kwargs)
     end
+
+    def to_s
+      return name unless name.nil?
+      super
+    end
+    alias inspect to_s
   end
 end

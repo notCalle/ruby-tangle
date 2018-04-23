@@ -33,7 +33,7 @@ module Tangle
 
     def to_s
       vertex1, vertex2 = @vertices.keys
-      "{#{vertex1}<=>#{vertex2}}"
+      "{#{vertex1}<->#{vertex2}}"
     end
     alias inspect to_s
 
