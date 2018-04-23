@@ -21,8 +21,9 @@ module Tangle
       end
 
       def to_s
-        "{#{@child}=>#{@parent}}"
+        "{#{@child}-->#{@parent}}"
       end
+      alias inspect to_s
 
       private
 
