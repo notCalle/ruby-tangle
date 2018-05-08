@@ -13,8 +13,6 @@ Tangle aims to untangle your graphs, by providing a set of classes for managing 
 
 **Feature mixins**:
  * Connectedness
- * Ancestry
- * ~~Vertex ordering~~
  * ~~Coloring~~
  * ~~GraphViz~~
 

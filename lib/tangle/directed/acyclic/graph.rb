@@ -20,8 +20,8 @@ module Tangle
         protected
 
         def insert_edge(edge)
-          raise CyclicError if ancestor?(edge.parent, edge.child) ||
-                               descendant?(edge.child, edge.parent)
+          raise CyclicError if successor?(edge.head, edge.tail) ||
+                               predecessor?(edge.tail, edge.head)
           super
         end
       end
