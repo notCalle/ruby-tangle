@@ -23,40 +23,66 @@ RSpec.describe Tangle::Directed::Graph do
       @graph.add_edge 'b', 'c'
     end
 
-    it 'can find its parents' do
-      expect(@graph).to respond_to :parents
+    it 'can find its direct successors' do
+      expect(@graph).to respond_to :direct_successors
+      expect(@graph.direct_successors(@vertex_a)).to include @vertex_b
+      expect(@graph.direct_successors(@vertex_a)).not_to include @vertex_c
     end
 
-    it 'can find its children' do
-      expect(@graph).to respond_to :children
+    it 'can find its direct predecessors' do
+      expect(@graph).to respond_to :direct_predecessors
+      expect(@graph.direct_predecessors(@vertex_c)).to include @vertex_b
+      expect(@graph.direct_predecessors(@vertex_c)).not_to include @vertex_a
     end
 
-    it 'only includes direct ancestors in parents' do
-      expect(@graph.parents(@vertex_a)).to include @vertex_b
-      expect(@graph.parents(@vertex_a)).not_to include @vertex_c
+    it 'can test if another vertex is a direct successor' do
+      expect(@graph).to respond_to :direct_successor?
+      expect(@graph.direct_successor?(@vertex_a, @vertex_b)).to be true
+      expect(@graph.direct_successor?(@vertex_a, @vertex_c)).to be false
     end
 
-    it 'only includes direct descendants in children' do
-      expect(@graph.children(@vertex_c)).to include @vertex_b
-      expect(@graph.children(@vertex_c)).not_to include @vertex_a
+    it 'can test if another vertex is a direct predecessor' do
+      expect(@graph).to respond_to :direct_predecessor?
+      expect(@graph.direct_predecessor?(@vertex_c, @vertex_b)).to be true
+      expect(@graph.direct_predecessor?(@vertex_c, @vertex_a)).to be false
     end
 
-    it 'can test parentness' do
-      expect(@graph).to respond_to :parent?
+    it 'can test if another vertex is a successor' do
+      expect(@graph).to respond_to :successor?
     end
 
-    it 'can test childness' do
-      expect(@graph).to respond_to :child?
+    it 'is a successor to itself' do
+      expect(@graph.successor?(@vertex_a, @vertex_a)).to be true
     end
 
-    it 'is only a parent to its direct descendants' do
-      expect(@graph.parent?(@vertex_a, @vertex_b)).to be true
-      expect(@graph.parent?(@vertex_a, @vertex_c)).to be false
+    it 'can test if another vertex is a predecessor' do
+      expect(@graph).to respond_to :predecessor?
     end
 
-    it 'is only a child to its direct ancestors' do
-      expect(@graph.child?(@vertex_c, @vertex_b)).to be true
-      expect(@graph.child?(@vertex_c, @vertex_a)).to be false
+    it 'is a predecessor to itself' do
+      expect(@graph.predecessor?(@vertex_a, @vertex_a)).to be true
+    end
+
+    it 'is a successor of its direct predecessors' do
+      expect(@graph.successor?(@vertex_a, @vertex_b)).to be true
+    end
+
+    it 'is a predecessor of its direct successors' do
+      expect(@graph.predecessor?(@vertex_b, @vertex_a)).to be true
+    end
+
+    it 'is a successor through direct successors' do
+      expect(@graph.direct_successor?(@vertex_a, @vertex_c)).to be false
+      expect(@graph.direct_successor?(@vertex_a, @vertex_b)).to be true
+      expect(@graph.direct_successor?(@vertex_b, @vertex_c)).to be true
+      expect(@graph.successor?(@vertex_a, @vertex_c)).to be true
+    end
+
+    it 'is a predecessor through direct predecessors' do
+      expect(@graph.direct_predecessor?(@vertex_c, @vertex_a)).to be false
+      expect(@graph.direct_predecessor?(@vertex_c, @vertex_b)).to be true
+      expect(@graph.direct_predecessor?(@vertex_b, @vertex_a)).to be true
+      expect(@graph.predecessor?(@vertex_c, @vertex_a)).to be true
     end
   end
 end

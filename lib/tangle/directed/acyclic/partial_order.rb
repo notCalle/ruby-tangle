@@ -27,7 +27,7 @@ module Tangle
         def <=>(other)
           raise RuntimeError unless graph == other.graph
           return 0 if vertex == other.vertex
-          return -1 if graph.ancestor?(vertex, other.vertex)
+          return -1 if graph.successor?(vertex, other.vertex)
           1
         end
       end
