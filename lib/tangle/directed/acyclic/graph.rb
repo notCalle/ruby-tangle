@@ -9,10 +9,7 @@ module Tangle
         # Return a topological ordering of a set of vertices, or all
         # vertices in the graph.
         def topological_ordering(*vertices)
-          vertices = if vertices.empty?
-                       self.vertices
-                     end
-          PartialOrder[self, vertices].sort!.map(&:vertex)
+          PartialOrder[self, *vertices].sort!.map(&:vertex)
         end
 
         protected

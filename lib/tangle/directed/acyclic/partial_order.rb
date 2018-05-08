@@ -9,7 +9,8 @@ module Tangle
         # in a parial ordering, such that the elements in the
         # returned set are comparable by u <= v iff v is an
         # ancestor of u.
-        def self.[](graph, vertices = graph.vertices)
+        def self.[](graph, *vertices)
+          vertices = graph.vertices if vertices.empty?
           vertices.map { |vertex| new(graph, vertex) }
         end
 
