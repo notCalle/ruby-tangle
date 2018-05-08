@@ -5,14 +5,10 @@ RSpec.describe PartialOrder do
   end
 
   before :example do
-    @dag = Tangle::DAG.new
-    @vertex_a = @dag.add_vertex name: 'a'
-    @vertex_b = @dag.add_vertex name: 'b'
-    @vertex_c = @dag.add_vertex name: 'c'
-    @dag.add_edge 'a', 'b'
-    @order_a = PartialOrder.new(@dag, @vertex_a)
-    @order_b = PartialOrder.new(@dag, @vertex_b)
-    @order_c = PartialOrder.new(@dag, @vertex_c)
+    @dag = Tangle::DAG[%w[a b c], [%w[a b]]]
+    @order_a = PartialOrder.new(@dag, 'a')
+    @order_b = PartialOrder.new(@dag, 'b')
+    @order_c = PartialOrder.new(@dag, 'c')
   end
 
   it 'partially orders vertices' do

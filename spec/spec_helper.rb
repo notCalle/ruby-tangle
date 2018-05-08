@@ -27,12 +27,6 @@ module Helpers
       end
     end
 
-    module Vertex
-      def mixin_ok?
-        true
-      end
-    end
-
     module Edge
       def mixin_ok?
         true
