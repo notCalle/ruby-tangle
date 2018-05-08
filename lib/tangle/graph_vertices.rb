@@ -14,16 +14,6 @@ module Tangle
       insert_vertex(Vertex.new(mixins: @mixins, **kwargs))
     end
 
-    # Add multiple vertices
-    def add_vertices(vertices)
-      case vertices
-      when Hash
-        vertices.each { |name, kwargs| add_vertex(name: name, **kwargs) }
-      else
-        vertices.each { |kwargs| add_vertex(**kwargs) }
-      end
-    end
-
     def fetch_vertex(name)
       @vertices_by_name.fetch(name)
     end

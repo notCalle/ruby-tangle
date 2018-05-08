@@ -33,7 +33,7 @@ module Tangle
     #
     def self.[](vertices, edges = {}, **kwargs)
       graph = new(**kwargs)
-      graph.add_vertices(vertices)
+      vertices.each { |vertex| graph.add_vertex(vertex) }
       edges.each { |from, to| graph.add_edge(from, to) }
       graph
     end
