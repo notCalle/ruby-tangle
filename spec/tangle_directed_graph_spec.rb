@@ -84,5 +84,40 @@ RSpec.describe Tangle::Directed::Graph do
       expect(@graph.direct_predecessor?(@vertex_b, @vertex_a)).to be true
       expect(@graph.predecessor?(@vertex_c, @vertex_a)).to be true
     end
+
+    it 'can measure its in degree' do
+      expect(@graph).to respond_to :in_degree
+      expect(@graph.in_degree(@vertex_a)).to be 0
+      expect(@graph.in_degree(@vertex_b)).to be 1
+      expect(@graph.in_degree(@vertex_c)).to be 1
+    end
+
+    it 'can measure its out degree' do
+      expect(@graph).to respond_to :out_degree
+      expect(@graph.out_degree(@vertex_a)).to be 1
+      expect(@graph.out_degree(@vertex_b)).to be 1
+      expect(@graph.out_degree(@vertex_c)).to be 0
+    end
+
+    it 'can detect source vertices' do
+      expect(@graph).to respond_to :source?
+      expect(@graph.source?(@vertex_a)).to be true
+      expect(@graph.source?(@vertex_b)).to be false
+      expect(@graph.source?(@vertex_c)).to be false
+    end
+
+    it 'can detect sink vertices' do
+      expect(@graph).to respond_to :sink?
+      expect(@graph.sink?(@vertex_a)).to be false
+      expect(@graph.sink?(@vertex_b)).to be false
+      expect(@graph.sink?(@vertex_c)).to be true
+    end
+
+    it 'can detect internal vertices' do
+      expect(@graph).to respond_to :internal?
+      expect(@graph.internal?(@vertex_a)).to be false
+      expect(@graph.internal?(@vertex_b)).to be true
+      expect(@graph.internal?(@vertex_c)).to be false
+    end
   end
 end
