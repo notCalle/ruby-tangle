@@ -1,6 +1,5 @@
 require 'tangle/mixin'
 require 'tangle/mixin/connectedness'
-require 'tangle/vertex'
 require 'tangle/edge'
 require 'tangle/graph_vertices'
 require 'tangle/graph_edges'
@@ -14,7 +13,6 @@ module Tangle
     include Tangle::GraphEdges
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
-    Vertex = Tangle::Vertex
     DEFAULT_MIXINS = Tangle::Mixin::Connectedness::MIXINS
 
     # Initialize a new graph, preloading it with vertices and edges

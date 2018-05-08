@@ -9,7 +9,7 @@ module Tangle
     #
     def edges(vertex = nil)
       return @edges if vertex.nil?
-      @edges_by_vertex.fetch(vertex)
+      @vertices.fetch(vertex)
     end
 
     # Add a new edge to the graph
@@ -23,7 +23,7 @@ module Tangle
     # Remove an edge from the graph
     def remove_edge(edge)
       edge.each_vertex do |vertex|
-        @edges_by_vertex[vertex].delete(edge)
+        @vertices.fetch(vertex).delete(edge)
       end
       @edges.delete(edge)
     end
@@ -35,7 +35,7 @@ module Tangle
     def insert_edge(edge)
       @edges << edge
       edge.each_vertex do |vertex|
-        @edges_by_vertex[vertex] << edge
+        @vertices.fetch(vertex) << edge
       end
       edge
     end
