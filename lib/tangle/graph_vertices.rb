@@ -3,68 +3,31 @@ require 'set'
 module Tangle
   # Vertex related methods in a graph
   module GraphVertices
-    attr_reader :vertices
-
-    # Prepare a new vertex, and insert into the graph
-    #
-    # add_vertex(...) => Vertex
-    #
-    # See +Vertex.new+ for valid kwargs
-    def add_vertex(**kwargs)
-      insert_vertex(Vertex.new(mixins: @mixins, **kwargs))
+    # Return all vertices in the graph
+    def vertices
+      @vertices.keys
     end
 
-    # Add multiple vertices
-    def add_vertices(vertices)
-      case vertices
-      when Hash
-        vertices.each { |name, kwargs| add_vertex(name: name, **kwargs) }
-      else
-        vertices.each { |kwargs| add_vertex(**kwargs) }
-      end
+    # Add a vertex into the graph
+    def add_vertex(vertex)
+      @vertices[vertex] = Set[]
+      self
     end
-
-    def fetch_vertex(name)
-      @vertices_by_name.fetch(name)
-    end
-
-    def get_vertex(name)
-      return name if name.is_a? Vertex
-      fetch_vertex(name)
-    end
-
-    def get_vertices(*names)
-      names.flatten.map { |name| get_vertex(name) }
-    end
+    alias << add_vertex
 
     # Remove a vertex from the graph
     def remove_vertex(vertex)
-      vertex = get_vertex(vertex)
-      @edges_by_vertex[vertex].each do |edge|
+      @vertices[vertex].each do |edge|
         remove_edge(edge) if edge.include?(vertex)
       end
-      @edges_by_vertex.delete(vertex)
-      @vertices_by_name.delete(vertex.name) unless vertex.name.nil?
       @vertices.delete(vertex)
-    end
-
-    protected
-
-    # Insert a vertex into the graph
-    def insert_vertex(vertex)
-      @vertices << vertex
-      @vertices_by_name[vertex.name] = vertex unless vertex.name.nil?
-      @edges_by_vertex[vertex] = Set[]
-      vertex
     end
 
     private
 
     # Initialize vertex related attributes
     def initialize_vertices
-      @vertices = Set[]
-      @vertices_by_name = {}
-      @edges_by_vertex = {}
+      @vertices = {}
     end
 
     # Yield each reachable vertex to a block, breadth first

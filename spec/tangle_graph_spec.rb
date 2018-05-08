@@ -1,5 +1,3 @@
-require 'tangle/graph'
-
 RSpec.describe Tangle::Graph do
   before :context do
     @graph = Tangle::Graph.new
@@ -18,11 +16,11 @@ RSpec.describe Tangle::Graph do
   end
 
   it 'can add new vertices' do
-    expect(@graph.add_vertex(name: :a)).to be_a Tangle::Vertex
+    expect { @graph.add_vertex('a') }.not_to raise_error
   end
 
   it 'can add new edges' do
-    expect(@graph.add_edge(:a, :a)).to be_a Tangle::Edge
+    expect(@graph.add_edge('a', 'a')).to be_a Tangle::Edge
   end
 
   it 'can test (dis)connectedness' do
@@ -57,7 +55,7 @@ RSpec.describe Tangle::Graph do
 
     context 'with one vertex only' do
       before :context do
-        @graph = Tangle::Graph[{ a: {} }]
+        @graph = Tangle::Graph[%w[a]]
       end
 
       it 'has a vertex' do
@@ -76,7 +74,7 @@ RSpec.describe Tangle::Graph do
 
     context 'with two vertices only' do
       before :context do
-        @graph = Tangle::Graph[{ a: {}, b: {} }]
+        @graph = Tangle::Graph[%w[a b]]
       end
 
       it 'has vertices' do
@@ -95,7 +93,7 @@ RSpec.describe Tangle::Graph do
 
     context 'with two vertices and an edge' do
       before :context do
-        @graph = Tangle::Graph[{ a: {}, b: {} }, [%i[a b]]]
+        @graph = Tangle::Graph[%w[a b], [%w[a b]]]
       end
 
       it 'has vertices' do
@@ -129,12 +127,8 @@ RSpec.describe Tangle::Graph do
 
   context 'given a vertex' do
     before :context do
-      @graph = Tangle::Graph.new
-      @vertex_a = @graph.add_vertex(name: 'a')
-      @vertex_b = @graph.add_vertex(name: 'b')
+      @graph = Tangle::Graph[%w[a b c d], [%w[a b], %w[b d]]]
       @graph.add_edge 'a', 'b'
-      @vertex_c = @graph.add_vertex(name: 'c')
-      @vertex_d = @graph.add_vertex(name: 'd')
       @graph.add_edge 'b', 'd'
     end
 
@@ -143,8 +137,8 @@ RSpec.describe Tangle::Graph do
     end
 
     it 'only includes adjacent vertices' do
-      expect(@graph.adjacent(@vertex_a)).to include @vertex_b
-      expect(@graph.adjacent(@vertex_a)).not_to include @vertex_c
+      expect(@graph.adjacent('a')).to include 'b'
+      expect(@graph.adjacent('a')).not_to include 'c'
     end
 
     it 'can test adjacency' do
@@ -152,8 +146,8 @@ RSpec.describe Tangle::Graph do
     end
 
     it 'is only adjacent to its neighbours' do
-      expect(@graph.adjacent?(@vertex_a, @vertex_b)).to be true
-      expect(@graph.adjacent?(@vertex_a, @vertex_c)).to be false
+      expect(@graph.adjacent?('a', 'b')).to be true
+      expect(@graph.adjacent?('a', 'c')).to be false
     end
 
     it 'can test connectivity' do
@@ -161,18 +155,18 @@ RSpec.describe Tangle::Graph do
     end
 
     it 'is connected to itself' do
-      expect(@graph.connected?(@vertex_a, @vertex_a)).to be true
+      expect(@graph.connected?('a', 'a')).to be true
     end
 
     it 'is connected to adjacent vertices' do
-      expect(@graph.connected?(@vertex_a, @vertex_b)).to be true
+      expect(@graph.connected?('a', 'b')).to be true
     end
 
     it 'is connected through transitive adjacency' do
-      expect(@graph.adjacent?(@vertex_a, @vertex_d)).to be false
-      expect(@graph.adjacent?(@vertex_a, @vertex_b)).to be true
-      expect(@graph.adjacent?(@vertex_b, @vertex_d)).to be true
-      expect(@graph.connected?(@vertex_a, @vertex_d)).to be true
+      expect(@graph.adjacent?('a', 'd')).to be false
+      expect(@graph.adjacent?('a', 'b')).to be true
+      expect(@graph.adjacent?('b', 'd')).to be true
+      expect(@graph.connected?('a', 'd')).to be true
     end
   end
 end

@@ -1,15 +1,6 @@
-require 'tangle/directed/acyclic/graph'
-
 RSpec.describe Tangle::Directed::Acyclic::Graph do
   before :example do
-    @graph = Tangle::Directed::Acyclic::Graph.new
-    @graph.add_vertex name: 'a'
-    @graph.add_vertex name: 'b'
-    @graph.add_vertex name: 'c'
-    @graph.add_vertex name: 'd'
-    @graph.add_edge 'a', 'b'
-    @graph.add_edge 'b', 'c'
-    @graph.add_edge 'a', 'd'
+    @graph = Tangle::DAG[%w[a b c d], [%w[a b], %w[b c], %w[a d]]]
   end
 
   it 'is a specialization of a directed graph' do

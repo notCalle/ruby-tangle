@@ -11,13 +11,11 @@ module Tangle
 
       # Return the incoming edges for +vertex+
       def in_edges(vertex)
-        vertex = get_vertex(vertex)
         edges(vertex).select { |edge| edge.head?(vertex) }
       end
 
       # Return the direct predecessors of +vertex+
       def direct_predecessors(vertex)
-        vertex = get_vertex(vertex)
         Set.new(in_edges(vertex).map(&:tail))
       end
 
@@ -28,7 +26,6 @@ module Tangle
 
       # Return a breadth first enumerator for all predecessors
       def predecessors(vertex)
-        vertex = get_vertex(vertex)
         vertex_enumerator(vertex, :direct_predecessors)
       end
 
@@ -39,19 +36,16 @@ module Tangle
 
       # Return a subgraph with all predecessors of a +vertex+
       def predecessor_subgraph(vertex, &selector)
-        vertex = get_vertex(vertex)
         subgraph(predecessors(vertex), &selector)
       end
 
       # Return the outgoing edges for +vertex+
       def out_edges(vertex)
-        vertex = get_vertex(vertex)
         edges(vertex).select { |edge| edge.tail?(vertex) }
       end
 
       # Return the direct successors of +vertex+
       def direct_successors(vertex)
-        vertex = get_vertex(vertex)
         Set.new(out_edges(vertex).map(&:head))
       end
 
@@ -62,7 +56,6 @@ module Tangle
 
       # Return a breadth first enumerator for all successors
       def successors(vertex)
-        vertex = get_vertex(vertex)
         vertex_enumerator(vertex, :direct_successors)
       end
 
@@ -73,7 +66,6 @@ module Tangle
 
       # Return a subgraph with all successors of a +vertex+
       def successor_subgraph(vertex, &selector)
-        vertex = get_vertex(vertex)
         subgraph(successors(vertex), &selector)
       end
 

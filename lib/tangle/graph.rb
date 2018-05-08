@@ -1,6 +1,5 @@
 require 'tangle/mixin'
 require 'tangle/mixin/connectedness'
-require 'tangle/vertex'
 require 'tangle/edge'
 require 'tangle/graph_vertices'
 require 'tangle/graph_edges'
@@ -14,7 +13,6 @@ module Tangle
     include Tangle::GraphEdges
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
-    Vertex = Tangle::Vertex
     DEFAULT_MIXINS = Tangle::Mixin::Connectedness::MIXINS
 
     # Initialize a new graph, preloading it with vertices and edges
@@ -33,7 +31,7 @@ module Tangle
     #
     def self.[](vertices, edges = {}, **kwargs)
       graph = new(**kwargs)
-      graph.add_vertices(vertices)
+      vertices.each { |vertex| graph.add_vertex(vertex) }
       edges.each { |from, to| graph.add_edge(from, to) }
       graph
     end
