@@ -9,7 +9,6 @@ module Tangle
     #
     def edges(vertex = nil)
       return @edges if vertex.nil?
-      vertex = fetch_vertex(vertex) unless vertex.is_a? Vertex
       @edges_by_vertex.fetch(vertex)
     end
 
@@ -18,7 +17,6 @@ module Tangle
     # add_edge(vtx1, vtx2, ...) => Edge
     #
     def add_edge(*vertices, **kvargs)
-      vertices = get_vertices(vertices)
       insert_edge(self.class::Edge.new(*vertices, mixins: @mixins, **kvargs))
     end
 

@@ -11,13 +11,11 @@ module Tangle
       module Graph
         # Two vertices are adjacent if there is an edge between them
         def adjacent?(vertex, other)
-          vertex, other = get_vertices(vertex, other)
           edges(vertex).any? { |edge| edge[vertex] == other }
         end
 
         # Return the set of adjacent vertices
         def adjacent(vertex)
-          vertex = get_vertex(vertex)
           Set.new(edges(vertex).map { |edge| edge.walk(vertex) })
         end
 
@@ -27,7 +25,6 @@ module Tangle
         # connected_subgraph(vertex) => Graph
         #
         def connected_subgraph(vertex)
-          vertex = get_vertex(vertex)
           subgraph { |other| connected_vertices?(vertex, other) }
         end
         alias component connected_subgraph
@@ -37,7 +34,6 @@ module Tangle
         # left after removing the connected subgraph.
         #
         def disconnected_subgraph(vertex)
-          vertex = get_vertex(vertex)
           subgraph { |other| !connected_vertices?(vertex, other) }
         end
 
@@ -45,11 +41,11 @@ module Tangle
         # An empty graph is disconnected.
         #
         def connected?(*tested_vertices)
-          tested_vertices = vertices.to_a if tested_vertices.empty?
+          tested_vertices = vertices if tested_vertices.empty?
           return false if tested_vertices.empty?
 
           tested_vertices.combination(2).all? do |pair|
-            this, that = get_vertices(pair.to_a)
+            this, that = pair.to_a
             reachable(this).any? { |other| other == that }
           end
         end

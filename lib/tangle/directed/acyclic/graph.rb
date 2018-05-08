@@ -11,8 +11,6 @@ module Tangle
         def topological_ordering(*vertices)
           vertices = if vertices.empty?
                        self.vertices
-                     else
-                       get_vertices(*vertices) unless vertices.empty?
                      end
           PartialOrder[self, vertices].sort!.map(&:vertex)
         end
