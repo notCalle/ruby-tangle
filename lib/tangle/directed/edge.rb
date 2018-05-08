@@ -6,28 +6,32 @@ module Tangle
     # An edge in a directed graph
     #
     class Edge < Tangle::Edge
-      def parent?(vertex)
-        @parent == vertex
+      attr_reader :head, :tail
+
+      def head?(vertex)
+        @head == vertex
       end
 
-      def parent(_vertex = nil)
-        @parent
+      def tail?(vertex)
+        @tail == vertex
       end
 
-      def child?(vertex)
-        @child == vertex
+      def each_vertex(&block)
+        [@tail, @head].each(&block)
       end
 
-      def child(_vertex = nil)
-        @child
+      def to_s
+        "{#{@tail}-->#{@head}}"
       end
+      alias inspect to_s
 
-      protected
+      private
 
-      def with_vertices(child, parent = child)
-        @child = child
-        @parent = parent
+      def initialize_vertices(tail, head = tail)
         super
+        @tail = tail
+        @head = head
+        @vertices = { tail => head }
       end
     end
   end

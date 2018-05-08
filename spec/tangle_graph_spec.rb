@@ -1,5 +1,3 @@
-require 'tangle/graph'
-
 RSpec.describe Tangle::Graph do
   before :context do
     @graph = Tangle::Graph.new
@@ -18,11 +16,11 @@ RSpec.describe Tangle::Graph do
   end
 
   it 'can add new vertices' do
-    expect(@graph.add_vertex(name: :a)).to be_a Tangle::Vertex
+    expect { @graph.add_vertex('a') }.not_to raise_error
   end
 
   it 'can add new edges' do
-    expect(@graph.add_edge(:a, :a)).to be_an Tangle::Edge
+    expect(@graph.add_edge('a', 'a')).to be_a Tangle::Edge
   end
 
   it 'can test (dis)connectedness' do
@@ -57,7 +55,7 @@ RSpec.describe Tangle::Graph do
 
     context 'with one vertex only' do
       before :context do
-        @graph = Tangle::Graph[{ a: {} }]
+        @graph = Tangle::Graph[%w[a]]
       end
 
       it 'has a vertex' do
@@ -76,7 +74,7 @@ RSpec.describe Tangle::Graph do
 
     context 'with two vertices only' do
       before :context do
-        @graph = Tangle::Graph[{ a: {}, b: {} }]
+        @graph = Tangle::Graph[%w[a b]]
       end
 
       it 'has vertices' do
@@ -95,7 +93,7 @@ RSpec.describe Tangle::Graph do
 
     context 'with two vertices and an edge' do
       before :context do
-        @graph = Tangle::Graph[{ a: {}, b: {} }, [%i[a b]]]
+        @graph = Tangle::Graph[%w[a b], [%w[a b]]]
       end
 
       it 'has vertices' do
@@ -124,6 +122,51 @@ RSpec.describe Tangle::Graph do
       @mixin::Graph.public_instance_methods.each do |method|
         expect(@subgraph).to respond_to method
       end
+    end
+  end
+
+  context 'given a vertex' do
+    before :context do
+      @graph = Tangle::Graph[%w[a b c d], [%w[a b], %w[b d]]]
+      @graph.add_edge 'a', 'b'
+      @graph.add_edge 'b', 'd'
+    end
+
+    it 'can find adjacent vertices' do
+      expect(@graph).to respond_to :adjacent
+    end
+
+    it 'only includes adjacent vertices' do
+      expect(@graph.adjacent('a')).to include 'b'
+      expect(@graph.adjacent('a')).not_to include 'c'
+    end
+
+    it 'can test adjacency' do
+      expect(@graph).to respond_to :adjacent?
+    end
+
+    it 'is only adjacent to its neighbours' do
+      expect(@graph.adjacent?('a', 'b')).to be true
+      expect(@graph.adjacent?('a', 'c')).to be false
+    end
+
+    it 'can test connectivity' do
+      expect(@graph).to respond_to :connected?
+    end
+
+    it 'is connected to itself' do
+      expect(@graph.connected?('a', 'a')).to be true
+    end
+
+    it 'is connected to adjacent vertices' do
+      expect(@graph.connected?('a', 'b')).to be true
+    end
+
+    it 'is connected through transitive adjacency' do
+      expect(@graph.adjacent?('a', 'd')).to be false
+      expect(@graph.adjacent?('a', 'b')).to be true
+      expect(@graph.adjacent?('b', 'd')).to be true
+      expect(@graph.connected?('a', 'd')).to be true
     end
   end
 end
