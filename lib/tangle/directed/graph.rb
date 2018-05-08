@@ -76,6 +76,36 @@ module Tangle
         vertex = get_vertex(vertex)
         subgraph(successors(vertex), &selector)
       end
+
+      # Return the in degree for +vertex+
+      def in_degree(vertex)
+        in_edges(vertex).count
+      end
+
+      # Return the out degree for +vertex+
+      def out_degree(vertex)
+        out_edges(vertex).count
+      end
+
+      # Is +vertex+ a sink in the graph?
+      def sink?(vertex)
+        out_degree(vertex).zero?
+      end
+
+      # Is +vertex+ a source in the graph?
+      def source?(vertex)
+        in_degree(vertex).zero?
+      end
+
+      # Is +vertex+ internal in the graph?
+      def internal?(vertex)
+        !(sink?(vertex) || source?(vertex))
+      end
+
+      # Is the graph balanced?
+      def balanced?
+        vertices.all? { |vertex| in_degree(vertex) == out_degree(vertex) }
+      end
     end
   end
 end
