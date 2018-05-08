@@ -28,6 +28,10 @@ RSpec.describe Tangle::Directed::Acyclic::Graph do
     expect { @graph.dependant_subgraph('a') }.not_to raise_error
   end
 
+  it 'has a topological ordering' do
+    expect { @graph.topological_ordering }.not_to raise_error
+  end
+
   it 'disallows edge cycles' do
     expect { @graph.add_edge('a') }.to raise_error Tangle::CyclicError
     expect { @graph.add_edge('c', 'a') }.to raise_error Tangle::CyclicError
