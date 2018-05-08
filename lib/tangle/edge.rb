@@ -42,7 +42,7 @@ module Tangle
     end
 
     def include?(vertex)
-      @vertices.include?(vertex)
+      each_vertex.include?(vertex)
     end
 
     def loop?
