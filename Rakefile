@@ -12,3 +12,8 @@ require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
 task default: %i[rubocop spec]
+desc 'Run Fasterer'
+task :fasterer do
+  require 'fasterer/cli'
+  Fasterer::CLI.execute
+end
