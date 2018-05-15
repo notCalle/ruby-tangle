@@ -16,7 +16,7 @@ module Tangle
 
       # Return the direct predecessors of +vertex+
       def direct_predecessors(vertex)
-        Set.new(in_edges(vertex).map(&:tail))
+        in_edges(vertex).map(&:tail).to_set
       end
 
       # Is +other+ a direct predecessor of +vertex+?
@@ -31,7 +31,7 @@ module Tangle
 
       # Is +other+ a predecessor of +vertex+?
       def predecessor?(vertex, other)
-        predecessors(vertex).include?(other)
+        predecessors(vertex).any? { |vtx| other.eql?(vtx) }
       end
 
       # Return a subgraph with all predecessors of a +vertex+
@@ -46,7 +46,7 @@ module Tangle
 
       # Return the direct successors of +vertex+
       def direct_successors(vertex)
-        Set.new(out_edges(vertex).map(&:head))
+        out_edges(vertex).map(&:head).to_set
       end
 
       # Is +other+ a direct successor of +vertex+?
@@ -61,7 +61,7 @@ module Tangle
 
       # Is +other+ a successor of +vertex+?
       def successor?(vertex, other)
-        successors(vertex).include?(other)
+        successors(vertex).any? { |vtx| other.eql?(vtx) }
       end
 
       # Return a subgraph with all successors of a +vertex+

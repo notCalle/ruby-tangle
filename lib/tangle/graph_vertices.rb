@@ -3,14 +3,27 @@ require 'set'
 module Tangle
   # Vertex related methods in a graph
   module GraphVertices
+    # Fetch a vertex by its name
+    def fetch(name)
+      @vertices_by_name.fetch(name)
+    end
+
+    # Return a named vertex
+    def [](name)
+      @vertices_by_name[name]
+    end
+
     # Return all vertices in the graph
     def vertices
       @vertices.keys
     end
 
     # Add a vertex into the graph
-    def add_vertex(vertex)
+    #
+    # If a name: is given, it will be registered by name
+    def add_vertex(vertex, name: nil)
       @vertices[vertex] = Set[]
+      @vertices_by_name[name] = vertex unless name.nil?
       self
     end
     alias << add_vertex
@@ -28,6 +41,7 @@ module Tangle
     # Initialize vertex related attributes
     def initialize_vertices
       @vertices = {}
+      @vertices_by_name = {}
     end
 
     # Yield each reachable vertex to a block, breadth first

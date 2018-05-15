@@ -1,14 +1,26 @@
 require 'bundler/setup'
 require 'bundler/gem_tasks'
 
-desc 'Run RuboCop'
 require 'rubocop/rake_task'
-RuboCop::RakeTask.new(:rubocop) do |task|
+RuboCop::RakeTask.new do |task|
   task.options << '--display-cop-names'
 end
 
-desc 'Run RSpec'
 require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new
 
-task default: %i[rubocop spec]
+desc 'Run Fasterer'
+task :fasterer do
+  require 'fasterer/cli'
+  Fasterer::CLI.execute
+end
+
+desc 'Check if version is fit for release'
+task :check_version do
+  raise 'Internal revision!' unless GVB.internal_revision.empty?
+end
+
+task test: %i[spec rubocop]
+task build: %i[spec]
+task release: %i[rubocop check_version]
+task default: %i[test]
