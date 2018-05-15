@@ -9,7 +9,6 @@ end
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new
 
-task default: %i[rubocop spec]
 desc 'Run Fasterer'
 task :fasterer do
   require 'fasterer/cli'
@@ -20,3 +19,8 @@ desc 'Check if version is fit for release'
 task :check_version do
   raise 'Internal revision!' unless GVB.internal_revision.empty?
 end
+
+task test: %i[spec rubocop]
+task build: %i[spec]
+task release: %i[rubocop check_version]
+task default: %i[test]
