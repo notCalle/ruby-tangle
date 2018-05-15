@@ -31,7 +31,7 @@ module Tangle
 
       # Is +other+ a predecessor of +vertex+?
       def predecessor?(vertex, other)
-        predecessors(vertex).include?(other)
+        predecessors(vertex).any? { |vtx| other.eql?(vtx) }
       end
 
       # Return a subgraph with all predecessors of a +vertex+
@@ -61,7 +61,7 @@ module Tangle
 
       # Is +other+ a successor of +vertex+?
       def successor?(vertex, other)
-        successors(vertex).include?(other)
+        successors(vertex).any? { |vtx| other.eql?(vtx) }
       end
 
       # Return a subgraph with all successors of a +vertex+
