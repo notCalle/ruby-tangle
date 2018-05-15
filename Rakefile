@@ -15,3 +15,8 @@ task :fasterer do
   require 'fasterer/cli'
   Fasterer::CLI.execute
 end
+
+desc 'Check if version is fit for release'
+task :check_version do
+  raise 'Internal revision!' unless GVB.internal_revision.empty?
+end
