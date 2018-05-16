@@ -20,8 +20,10 @@ module Tangle
 
     # Add a vertex into the graph
     #
-    # If a name: is given, it will be registered by name
+    # If a name: is given, or the vertex responds to :name,
+    # it will be registered by name in the graph
     def add_vertex(vertex, name: nil)
+      name ||= callback(vertex, :name)
       @vertices[vertex] = Set[]
       @vertices_by_name[name] = vertex unless name.nil?
       self
