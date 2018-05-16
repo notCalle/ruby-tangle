@@ -17,13 +17,17 @@ module Tangle
     # add_edge(vtx1, vtx2, ...) => Edge
     #
     def add_edge(*vertices, **kvargs)
-      insert_edge(self.class::Edge.new(*vertices, mixins: @mixins, **kvargs))
+      edge = self.class::Edge.new(*vertices, mixins: @mixins, **kvargs)
+      insert_edge(edge)
+      vertices.each { |vertex| callback(vertex, :edge_added, edge) }
+      edge
     end
 
     # Remove an edge from the graph
     def remove_edge(edge)
       edge.each_vertex do |vertex|
         @vertices.fetch(vertex).delete(edge)
+        callback(vertex, :edge_removed, edge)
       end
       @edges.delete(edge)
     end
@@ -37,7 +41,6 @@ module Tangle
       edge.each_vertex do |vertex|
         @vertices.fetch(vertex) << edge
       end
-      edge
     end
 
     private

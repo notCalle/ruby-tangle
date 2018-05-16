@@ -20,10 +20,13 @@ module Tangle
 
     # Add a vertex into the graph
     #
-    # If a name: is given, it will be registered by name
+    # If a name: is given, or the vertex responds to :name,
+    # it will be registered by name in the graph
     def add_vertex(vertex, name: nil)
+      name ||= callback(vertex, :name)
       @vertices[vertex] = Set[]
       @vertices_by_name[name] = vertex unless name.nil?
+      callback(vertex, :added_to_graph, self)
       self
     end
     alias << add_vertex
@@ -34,6 +37,8 @@ module Tangle
         remove_edge(edge) if edge.include?(vertex)
       end
       @vertices.delete(vertex)
+      @vertices_by_name.delete_if { |_, vtx| vtx.eql?(vertex) }
+      callback(vertex, :removed_from_graph, self)
     end
 
     private

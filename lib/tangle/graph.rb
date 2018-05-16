@@ -77,5 +77,11 @@ module Tangle
       "#<#{self.class}: #{vertices.count} vertices, #{edges.count} edges>"
     end
     alias inspect to_s
+
+    private
+
+    def callback(receiver, method, *args)
+      receiver.send(method, *args) if receiver.respond_to?(method)
+    end
   end
 end
