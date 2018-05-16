@@ -10,14 +10,18 @@ module Tangle
     #   follow_links:   bool for following symlinks to directories
     #                   (default false)
     #
-    # A loader lambda will be called like
-    #   ->(graph, path, parent_path) { ... }
+    # A loader lambda will be called with keyword arguments:
+    #   graph:    Graph being loaded
+    #   path:     Path of current filesystem object
+    #   parent:   Path of filesystem parent object
+    #   lstat:    File.lstat for path
+    #   stat:     File.stat for path, if lstat.symlink?
     #
-    # The lambdas are called in order until one returns true
+    # The lambdas are called in order until one returns true.
     #
     # Example:
-    #   loader = lambda do |g, path, parent|
-    #       vertex = File::Stat.new(path)
+    #   loader = lambda do |g, path, parent, lstat:, **|
+    #       vertex = kwargs[:lstat]
     #       g.add_vertex(vertex, name: path)
     #       g.add_edge(g[parent], vertex) unless parent.nil?
     #     end
@@ -38,16 +42,27 @@ module Tangle
         end
 
         def load_directory_graph(path, parent = nil)
-          @directory_loaders.any? do |loader|
-            loader.to_proc.call(self, path, parent)
-          end
-
-          return if File.symlink?(path) && !@follow_directory_links
-          return unless File.directory?(path)
+          return unless load_directory_object(path, parent)
 
           Dir.each_child(path) do |file|
             load_directory_graph(File.join(path, file), path)
           end
+        end
+
+        # Load a filesystem object into the graph, returning
+        # +true+ if the object was a directory (or link to one,
+        # and we're following links).
+        def load_directory_object(path, parent = nil)
+          stat = lstat = File.lstat(path)
+          stat = File.stat(path) if lstat.symlink?
+
+          @directory_loaders.any? do |loader|
+            loader.to_proc.call(graph: self, path: path, parent: parent,
+                                lstat: lstat, stat: stat)
+          end
+
+          return if lstat.symlink? && !@follow_directory_links
+          stat.directory?
         end
       end
     end
