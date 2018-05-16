@@ -7,11 +7,13 @@ module Tangle
     # options are:
     #   root:           root directory for the structure (mandatory)
     #   loaders:        list of object loader lambdas (mandatory)
+    #                     ->(graph, **) { ... } => finished?
     #   follow_links:   bool for following symlinks to directories
     #                   (default false)
     #
-    # A loader lambda will be called with keyword arguments:
-    #   graph:    Graph being loaded
+    # A loader lambda is called with the graph as only positional
+    # argument, and a number of keyword arguments:
+    #
     #   path:     Path of current filesystem object
     #   parent:   Path of filesystem parent object
     #   lstat:    File.lstat for path
@@ -20,7 +22,7 @@ module Tangle
     # The lambdas are called in order until one returns true.
     #
     # Example:
-    #   loader = lambda do |g, path, parent, lstat:, **|
+    #   loader = lambda do |g, path:, parent:, lstat:, **|
     #       vertex = kwargs[:lstat]
     #       g.add_vertex(vertex, name: path)
     #       g.add_edge(g[parent], vertex) unless parent.nil?
@@ -57,7 +59,7 @@ module Tangle
           stat = File.stat(path) if lstat.symlink?
 
           @directory_loaders.any? do |loader|
-            loader.to_proc.call(graph: self, path: path, parent: parent,
+            loader.to_proc.call(self, path: path, parent: parent,
                                 lstat: lstat, stat: stat)
           end
 
