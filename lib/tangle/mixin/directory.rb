@@ -60,7 +60,7 @@ module Tangle
 
           @directory_loaders.any? do |loader|
             loader.to_proc.call(self, path: path, parent: parent,
-                                lstat: lstat, stat: stat)
+                                      lstat: lstat, stat: stat)
           end
 
           return if lstat.symlink? && !@follow_directory_links

@@ -13,7 +13,7 @@ RSpec.describe Tangle::Mixin::Directory do
     before :context do
       @mixins = [Tangle::Mixin::Directory]
       @root = '.'
-      @loader = lambda do |graph:, path:, parent:, **|
+      @loader = lambda do |graph, path:, parent:, **|
         graph.add_vertex(path)
         graph.add_edge(parent, path) unless parent.nil?
       end
