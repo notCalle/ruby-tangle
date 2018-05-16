@@ -37,6 +37,7 @@ module Tangle
         remove_edge(edge) if edge.include?(vertex)
       end
       @vertices.delete(vertex)
+      @vertices_by_name.delete_if { |_, vtx| vtx.eql?(vertex) }
       callback(vertex, :removed_from_graph, self)
     end
 
