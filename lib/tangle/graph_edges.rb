@@ -41,7 +41,6 @@ module Tangle
       edge.each_vertex do |vertex|
         @vertices.fetch(vertex) << edge
       end
-      edge
     end
 
     private
