@@ -72,10 +72,25 @@ RSpec.describe Tangle::Graph do
       end
     end
 
-    context 'with a named vertex' do
+    context 'with a vertex, and a name' do
       before :example do
         @graph = Tangle::Graph.new
         @graph.add_vertex @vertex = 1, name: 'a'
+      end
+
+      it 'can fetch by name' do
+        expect(@graph.fetch('a')).to be @vertex
+        expect { @graph.fetch('b') }.to raise_error KeyError
+        expect(@graph['a']).to be @vertex
+        expect(@graph['b']).to be nil
+      end
+    end
+
+    context 'with a named vertex' do
+      before :example do
+        @graph = Tangle::Graph.new
+        @vertex = Struct.new(:name).new('a')
+        @graph.add_vertex @vertex
       end
 
       it 'can fetch by name' do
