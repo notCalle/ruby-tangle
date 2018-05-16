@@ -38,12 +38,15 @@ module Tangle
         end
 
         def load_directory_graph(path, parent = nil)
+          stat = lstat = File.lstat(path)
+          stat = File.stat(path) if lstat.symlink?
+
           @directory_loaders.any? do |loader|
             loader.to_proc.call(self, path, parent)
           end
 
-          return if File.symlink?(path) && !@follow_directory_links
-          return unless File.directory?(path)
+          return if lstat.symlink? && !@follow_directory_links
+          return unless stat.directory?(path)
 
           Dir.each_child(path) do |file|
             load_directory_graph(File.join(path, file), path)
