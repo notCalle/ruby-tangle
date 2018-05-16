@@ -27,6 +27,7 @@ module Tangle
     def remove_edge(edge)
       edge.each_vertex do |vertex|
         @vertices.fetch(vertex).delete(edge)
+        callback(vertex, :edge_removed, edge)
       end
       @edges.delete(edge)
     end
