@@ -13,9 +13,9 @@ RSpec.describe Tangle::Mixin::Directory do
     before :context do
       @mixins = [Tangle::Mixin::Directory]
       @root = '.'
-      @loader = lambda do |g, path, parent|
-        g.add_vertex(path)
-        g.add_edge(parent, path) unless parent.nil?
+      @loader = lambda do |graph:, path:, parent:, **|
+        graph.add_vertex(path)
+        graph.add_edge(parent, path) unless parent.nil?
       end
       @kwargs = {
         mixins: @mixins,
