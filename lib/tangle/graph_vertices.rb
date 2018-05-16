@@ -26,6 +26,7 @@ module Tangle
       name ||= callback(vertex, :name)
       @vertices[vertex] = Set[]
       @vertices_by_name[name] = vertex unless name.nil?
+      callback(vertex, :added_to_graph, self)
       self
     end
     alias << add_vertex
