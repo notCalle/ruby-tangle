@@ -36,9 +36,18 @@ module Tangle
       @vertices[vertex].each do |edge|
         remove_edge(edge) if edge.include?(vertex)
       end
+      delete_vertex(vertex)
+      callback(vertex, :removed_from_graph, self)
+    end
+
+    protected
+
+    def delete_vertex(vertex)
+      @vertices[vertex].each do |edge|
+        delete_edge(edge) if edge.include?(vertex)
+      end
       @vertices.delete(vertex)
       @vertices_by_name.delete_if { |_, vtx| vtx.eql?(vertex) }
-      callback(vertex, :removed_from_graph, self)
     end
 
     private
