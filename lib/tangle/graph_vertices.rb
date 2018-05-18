@@ -24,8 +24,7 @@ module Tangle
     # it will be registered by name in the graph
     def add_vertex(vertex, name: nil)
       name ||= callback(vertex, :name)
-      @vertices[vertex] = Set[]
-      @vertices_by_name[name] = vertex unless name.nil?
+      insert_vertex(vertex, name)
       callback(vertex, :added_to_graph, self)
       self
     end
@@ -41,6 +40,19 @@ module Tangle
     end
 
     protected
+
+    def select_vertices!(selected = nil)
+      vertices.each do |vertex|
+        delete_vertex(vertex) if block_given? && !yield(vertex)
+        next if selected.nil?
+        delete_vertex(vertex) unless selected.any? { |vtx| vtx.eql?(vertex) }
+      end
+    end
+
+    def insert_vertex(vertex, name = nil)
+      @vertices[vertex] = Set[]
+      @vertices_by_name[name] = vertex unless name.nil?
+    end
 
     def delete_vertex(vertex)
       @vertices[vertex].each do |edge|
