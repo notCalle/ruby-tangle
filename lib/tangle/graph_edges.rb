@@ -25,11 +25,8 @@ module Tangle
 
     # Remove an edge from the graph
     def remove_edge(edge)
-      edge.each_vertex do |vertex|
-        @vertices.fetch(vertex).delete(edge)
-        callback(vertex, :edge_removed, edge)
-      end
-      @edges.delete(edge)
+      delete_edge(edge)
+      edge.each_vertex { |vertex| callback(vertex, :edge_removed, edge) }
     end
 
     protected
@@ -41,6 +38,11 @@ module Tangle
       edge.each_vertex do |vertex|
         @vertices.fetch(vertex) << edge
       end
+    end
+
+    def delete_edge(edge)
+      edge.each_vertex { |vertex| @vertices.fetch(vertex).delete(edge) }
+      @edges.delete(edge)
     end
 
     private
