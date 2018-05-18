@@ -18,6 +18,11 @@ module Tangle
       @vertices.keys
     end
 
+    # Select vertices in the graph
+    def select(&selector)
+      @vertices.each_key.select(&selector)
+    end
+
     # Add a vertex into the graph
     #
     # If a name: is given, or the vertex responds to :name,
