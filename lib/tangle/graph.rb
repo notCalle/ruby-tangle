@@ -62,14 +62,10 @@ module Tangle
     #
     # Unless a selector is provided, the subgraph contains the entire graph.
     #
-    def subgraph(included = nil)
-      included ||= vertices
+    def subgraph(included = nil, &selector)
       result = clone
-      vertices.each do |vertex|
-        result.remove_vertex(vertex) unless included.include?(vertex)
-        next unless block_given?
-        result.remove_vertex(vertex) unless yield(vertex)
-      end
+      result.select_vertices!(included) unless included.nil?
+      result.select_vertices!(&selector) if block_given?
       result
     end
 
