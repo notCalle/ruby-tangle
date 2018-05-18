@@ -35,9 +35,7 @@ module Tangle
     #
     def insert_edge(edge)
       @edges << edge
-      edge.each_vertex do |vertex|
-        @vertices.fetch(vertex) << edge
-      end
+      edge.each_vertex { |vertex| @vertices.fetch(vertex) << edge }
     end
 
     def delete_edge(edge)
