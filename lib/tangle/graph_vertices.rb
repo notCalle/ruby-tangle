@@ -18,12 +18,19 @@ module Tangle
       @vertices.keys
     end
 
+    # Select vertices in the graph
+    def select(&selector)
+      @vertices.each_key.select(&selector)
+    end
+
     # Add a vertex into the graph
     #
-    # If a name: is given, it will be registered by name
+    # If a name: is given, or the vertex responds to :name,
+    # it will be registered by name in the graph
     def add_vertex(vertex, name: nil)
-      @vertices[vertex] = Set[]
-      @vertices_by_name[name] = vertex unless name.nil?
+      name ||= callback(vertex, :name)
+      insert_vertex(vertex, name)
+      callback(vertex, :added_to_graph, self)
       self
     end
     alias << add_vertex
@@ -33,7 +40,31 @@ module Tangle
       @vertices[vertex].each do |edge|
         remove_edge(edge) if edge.include?(vertex)
       end
+      delete_vertex(vertex)
+      callback(vertex, :removed_from_graph, self)
+    end
+
+    protected
+
+    def select_vertices!(selected = nil)
+      vertices.each do |vertex|
+        delete_vertex(vertex) if block_given? && !yield(vertex)
+        next if selected.nil?
+        delete_vertex(vertex) unless selected.any? { |vtx| vtx.eql?(vertex) }
+      end
+    end
+
+    def insert_vertex(vertex, name = nil)
+      @vertices[vertex] = Set[]
+      @vertices_by_name[name] = vertex unless name.nil?
+    end
+
+    def delete_vertex(vertex)
+      @vertices[vertex].each do |edge|
+        delete_edge(edge) if edge.include?(vertex)
+      end
       @vertices.delete(vertex)
+      @vertices_by_name.delete_if { |_, vtx| vtx.eql?(vertex) }
     end
 
     private
