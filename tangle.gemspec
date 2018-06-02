@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -20,6 +21,9 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
+
+  spec.platform = Gem::Platform::RUBY
+  spec.required_ruby_version = '~> 2.3'
 
   spec.add_dependency 'git-version-bump', '~> 0.15'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Tangle::Edge do
   before :example do
     @edge = Tangle::Edge.new('a', 'b')

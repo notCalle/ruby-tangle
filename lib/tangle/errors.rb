@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tangle
   #
   # LoopError is raised when a looped edge is disallowed.
