@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tangle/graph'
 require 'tangle/directed/edge'
 

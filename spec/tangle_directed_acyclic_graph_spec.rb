@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Tangle::Directed::Acyclic::Graph do
   before :example do
     @graph = Tangle::DAG[%w[a b c d], [%w[a b], %w[b c], %w[a d]]]

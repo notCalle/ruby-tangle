@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tangle/version'
 require 'tangle/errors'
 require 'tangle/graph'

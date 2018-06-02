@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tangle/mixin/directory'
 
 RSpec.describe Tangle::Mixin::Directory do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Tangle::Mixin do
   it 'is a module' do
     expect(Tangle::Mixin).to be_a Module

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tangle/mixin'
 require 'tangle/mixin/connectedness'
 require 'tangle/edge'

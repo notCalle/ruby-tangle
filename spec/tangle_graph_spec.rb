@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Tangle::Graph do
   before :context do
     @graph = Tangle::Graph.new

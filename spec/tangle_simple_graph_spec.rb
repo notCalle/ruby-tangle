@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Tangle::Simple::Graph do
   before :context do
     @graph = Tangle::Simple::Graph[%w[a b], [%w[a b]]]
