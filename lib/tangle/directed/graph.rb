@@ -11,89 +11,106 @@ module Tangle
       Edge = Tangle::Directed::Edge
 
       # Return the incoming edges for +vertex+
-      currify :vertex, def in_edges(vertex)
+      def in_edges(vertex)
         edges(vertex).select { |edge| edge.head?(vertex) }
       end
+      currify :vertex, :in_edges
 
       # Return the direct predecessors of +vertex+
-      currify :vertex, def direct_predecessors(vertex)
+      def direct_predecessors(vertex)
         in_edges(vertex).map(&:tail).to_set
       end
+      currify :vertex, :direct_predecessors
 
       # Is +other+ a direct predecessor of +vertex+?
-      currify :vertex, def direct_predecessor?(vertex, other)
+      def direct_predecessor?(vertex, other)
         direct_predecessors(vertex).include?(other)
       end
+      currify :vertex, :direct_predecessor?
 
       # Return a breadth first enumerator for all predecessors
-      currify :vertex, def predecessors(vertex)
+      def predecessors(vertex)
         vertex_enumerator(vertex, :direct_predecessors)
       end
+      currify :vertex, :predecessors
 
       # Is +other+ a predecessor of +vertex+?
-      currify :vertex, def predecessor?(vertex, other)
+      def predecessor?(vertex, other)
         predecessors(vertex).any? { |vtx| other.eql?(vtx) }
       end
+      currify :vertex, :predecessor?
 
       # Return a subgraph with all predecessors of a +vertex+
-      currify :vertex, def predecessor_subgraph(vertex, &selector)
+      def predecessor_subgraph(vertex, &selector)
         subgraph(predecessors(vertex), &selector)
       end
+      currify :vertex, :predecessor_subgraph
 
       # Return the outgoing edges for +vertex+
-      currify :vertex, def out_edges(vertex)
+      def out_edges(vertex)
         edges(vertex).select { |edge| edge.tail?(vertex) }
       end
+      currify :vertex, :out_edges
 
       # Return the direct successors of +vertex+
-      currify :vertex, def direct_successors(vertex)
+      def direct_successors(vertex)
         out_edges(vertex).map(&:head).to_set
       end
+      currify :vertex, :direct_successors
 
       # Is +other+ a direct successor of +vertex+?
-      currify :vertex, def direct_successor?(vertex, other)
+      def direct_successor?(vertex, other)
         direct_successors(vertex).include?(other)
       end
+      currify :vertex, :direct_successor?
 
       # Return a breadth first enumerator for all successors
-      currify :vertex, def successors(vertex)
+      def successors(vertex)
         vertex_enumerator(vertex, :direct_successors)
       end
+      currify :vertex, :successors
 
       # Is +other+ a successor of +vertex+?
-      currify :vertex, def successor?(vertex, other)
+      def successor?(vertex, other)
         successors(vertex).any? { |vtx| other.eql?(vtx) }
       end
+      currify :vertex, :successor?
 
       # Return a subgraph with all successors of a +vertex+
-      currify :vertex, def successor_subgraph(vertex, &selector)
+      def successor_subgraph(vertex, &selector)
         subgraph(successors(vertex), &selector)
       end
+      currify :vertex, :successor_subgraph
 
       # Return the in degree for +vertex+
-      currify :vertex, def in_degree(vertex)
+      def in_degree(vertex)
         in_edges(vertex).count
       end
+      currify :vertex, :in_degree
 
       # Return the out degree for +vertex+
-      currify :vertex, def out_degree(vertex)
+      def out_degree(vertex)
         out_edges(vertex).count
       end
+      currify :vertex, :out_degree
 
       # Is +vertex+ a sink in the graph?
-      currify :vertex, def sink?(vertex)
+      def sink?(vertex)
         out_degree(vertex).zero?
       end
+      currify :vertex, :sink?
 
       # Is +vertex+ a source in the graph?
-      currify :vertex, def source?(vertex)
+      def source?(vertex)
         in_degree(vertex).zero?
       end
+      currify :vertex, :source?
 
       # Is +vertex+ internal in the graph?
-      currify :vertex, def internal?(vertex)
+      def internal?(vertex)
         !(sink?(vertex) || source?(vertex))
       end
+      currify :vertex, :internal?
 
       # Is the graph balanced?
       def balanced?

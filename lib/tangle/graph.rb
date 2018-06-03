@@ -79,10 +79,11 @@ module Tangle
     #
     # edges => Array
     #
-    currify :vertex, def edges(vertex = nil)
+    def edges(vertex = nil)
       return @edges if vertex.nil?
       @vertices.fetch(vertex)
     end
+    currify :vertex, :edges
 
     # Add a new edge to the graph
     #

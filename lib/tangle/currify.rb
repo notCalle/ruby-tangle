@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 module Tangle
+  # Currification of instance methods, for adding callbacks to other objects
   module Currify
     def self.included(base)
       base.extend(ClassMethods)
     end
 
+    # Class method extensions for currification of instance methods
     module ClassMethods
       # Return a list of currified methods for a given tag.
       #
@@ -37,7 +39,7 @@ module Tangle
       self.class.currified_methods(tag)&.each do |name|
         obj.instance_exec(name, method(name).curry) do |method_name, method|
           define_singleton_method(method_name) do |*args|
-            method.(self, *args)
+            method.call(self, *args)
           end
         end
       end
