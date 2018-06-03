@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'tangle/graph'
-require 'tangle/directed/edge'
+require_relative '../base_graph'
+require_relative 'edge'
 
 module Tangle
   module Directed
     #
     # A directed graph
-    class Graph < Tangle::Graph
-      Edge = Tangle::Directed::Edge
-
+    class Graph < Tangle::BaseGraph
       # Return the incoming edges for +vertex+
       def in_edges(vertex)
         edges(vertex).select { |edge| edge.head?(vertex) }
@@ -115,6 +113,12 @@ module Tangle
       # Is the graph balanced?
       def balanced?
         vertices.all? { |vertex| in_degree(vertex) == out_degree(vertex) }
+      end
+
+      private
+
+      def new_edge(*args)
+        Edge.new(*args)
       end
     end
   end
