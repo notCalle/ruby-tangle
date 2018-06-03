@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'forwardable'
-require 'tangle/errors'
+require_relative 'mixin'
 
 module Tangle
   #
-  # An edge in a graph, connecting two vertices
+  # An edge in an undirected graph, connecting two vertices
   #
   class Edge
     include Tangle::Mixin::Initialize
@@ -33,16 +33,6 @@ module Tangle
       @vertices.fetch(from_vertex)
     end
 
-    def to_s
-      vertex1, vertex2 = @vertices.keys
-      "{#{vertex1}<->#{vertex2}}"
-    end
-    alias inspect to_s
-
-    def each_vertex(&block)
-      @vertices.each_key(&block)
-    end
-
     def include?(vertex)
       each_vertex.include?(vertex)
     end
@@ -53,9 +43,8 @@ module Tangle
 
     private
 
-    def initialize_vertices(vertex1, vertex2 = vertex1)
+    def initialize_vertices(vertex1, vertex2)
       @loop = vertex1 == vertex2
-      @vertices = { vertex1 => vertex2, vertex2 => vertex1 }.freeze
     end
   end
 end

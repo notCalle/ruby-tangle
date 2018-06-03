@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-RSpec.describe Tangle::Edge do
+RSpec.describe Tangle::Undirected::Edge do
   before :example do
-    @edge = Tangle::Edge.new('a', 'b')
+    @edge = Tangle::Undirected::Edge.new('a', 'b')
   end
 
-  it 'is a simple object' do
-    expect(@edge).to be_an Object
+  it 'is a specialization of an Edge' do
+    expect(@edge).to be_an Tangle::Edge
   end
 
   it 'can have a name' do
     edge_name = 'a<->b'
     expect {
-      @named_edge = Tangle::Edge.new('a', 'b', name: edge_name)
+      @named_edge = Tangle::Undirected::Edge.new('a', 'b', name: edge_name)
     }.not_to raise_error
     expect(@named_edge.name).to eq edge_name
   end

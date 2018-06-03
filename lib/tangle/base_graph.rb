@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
-require 'tangle/mixin'
-require 'tangle/mixin/connectedness'
-require 'tangle/edge'
-require 'tangle/graph_vertices'
-require 'tangle/graph_edges'
+require_relative 'currify'
+require_relative 'mixin'
+require_relative 'base_graph_protected'
+require_relative 'base_graph_private'
 
 module Tangle
   #
-  # Base class for all kinds of graphs
+  # Abstract base class for (un)directed graphs
   #
-  class Graph
-    include Tangle::GraphVertices
-    include Tangle::GraphEdges
+  class BaseGraph
+    include Tangle::Currify
     include Tangle::Mixin::Initialize
-    Edge = Tangle::Edge
-    DEFAULT_MIXINS = Tangle::Mixin::Connectedness::MIXINS
+    include Tangle::BaseGraphProtected
+    include Tangle::BaseGraphPrivate
 
     # Initialize a new graph, preloading it with vertices and edges
     #
@@ -51,7 +49,8 @@ module Tangle
     # Any subclass of Graph should also subclass Edge to manage its unique
     # constraints.
     #
-    def initialize(mixins: self.class::DEFAULT_MIXINS, **kwargs)
+    def initialize(currify: false, mixins: [], **kwargs)
+      @currify = currify
       initialize_vertices
       initialize_edges
       initialize_mixins(mixins: mixins, **kwargs)
@@ -76,10 +75,73 @@ module Tangle
     end
     alias inspect to_s
 
-    private
+    # Fetch a vertex by its name
+    def fetch(name)
+      @vertices_by_name.fetch(name)
+    end
 
-    def callback(receiver, method, *args)
-      receiver.send(method, *args) if receiver.respond_to?(method)
+    # Return a named vertex
+    def [](name)
+      @vertices_by_name[name]
+    end
+
+    # Return all vertices in the graph
+    def vertices
+      @vertices.keys
+    end
+
+    # Select vertices in the graph
+    def select(&selector)
+      @vertices.each_key.select(&selector)
+    end
+
+    # Add a vertex into the graph
+    #
+    # If a name: is given, or the vertex responds to :name,
+    # it will be registered by name in the graph
+    def add_vertex(vertex, name: nil)
+      name ||= callback(vertex, :name)
+      insert_vertex(vertex, name)
+      define_currified_methods(vertex, :vertex) if @currify
+      callback(vertex, :added_to_graph, self)
+      self
+    end
+    alias << add_vertex
+
+    # Remove a vertex from the graph
+    def remove_vertex(vertex)
+      @vertices[vertex].each do |edge|
+        remove_edge(edge) if edge.include?(vertex)
+      end
+      delete_vertex(vertex)
+      callback(vertex, :removed_from_graph, self)
+    end
+
+    # Get all edges.
+    #
+    # edges => Array
+    #
+    def edges(vertex = nil)
+      return @edges if vertex.nil?
+      @vertices.fetch(vertex)
+    end
+    currify :vertex, :edges
+
+    # Add a new edge to the graph
+    #
+    # add_edge(vtx1, vtx2, ...) => Edge
+    #
+    def add_edge(*vertices, **kvargs)
+      edge = new_edge(*vertices, mixins: @mixins, **kvargs)
+      insert_edge(edge)
+      vertices.each { |vertex| callback(vertex, :edge_added, edge) }
+      edge
+    end
+
+    # Remove an edge from the graph
+    def remove_edge(edge)
+      delete_edge(edge)
+      edge.each_vertex { |vertex| callback(vertex, :edge_removed, edge) }
     end
   end
 end
