@@ -9,7 +9,7 @@ module Tangle
     #
     # edges => Array
     #
-    def edges(vertex = nil)
+    currify :vertex, def edges(vertex = nil)
       return @edges if vertex.nil?
       @vertices.fetch(vertex)
     end
