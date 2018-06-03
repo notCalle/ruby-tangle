@@ -5,12 +5,13 @@ RSpec.describe Tangle::Directed::Graph do
     @graph = Tangle::Directed::Graph.new
   end
 
-  it 'is a specialization of a graph' do
-    expect(@graph).to be_a Tangle::Graph
+  it 'is a specialization of a base graph' do
+    expect(@graph).to be_a Tangle::BaseGraph
   end
 
   it 'has directed edges' do
-    expect(@graph.class::Edge).to be Tangle::Directed::Edge
+    @graph.add_vertex('a')
+    expect(@graph.add_edge('a', 'a')).to be_a Tangle::Directed::Edge
   end
 
   context 'given a vertex' do
