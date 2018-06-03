@@ -4,7 +4,6 @@ require 'tangle/currify'
 require 'tangle/mixin'
 require 'tangle/edge'
 require 'tangle/graph_vertices'
-require 'tangle/graph_edges'
 
 module Tangle
   #
@@ -13,7 +12,6 @@ module Tangle
   class Graph
     include Tangle::Currify
     include Tangle::GraphVertices
-    include Tangle::GraphEdges
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
 
@@ -77,10 +75,54 @@ module Tangle
     end
     alias inspect to_s
 
+    # Get all edges.
+    #
+    # edges => Array
+    #
+    currify :vertex, def edges(vertex = nil)
+      return @edges if vertex.nil?
+      @vertices.fetch(vertex)
+    end
+
+    # Add a new edge to the graph
+    #
+    # add_edge(vtx1, vtx2, ...) => Edge
+    #
+    def add_edge(*vertices, **kvargs)
+      edge = self.class::Edge.new(*vertices, mixins: @mixins, **kvargs)
+      insert_edge(edge)
+      vertices.each { |vertex| callback(vertex, :edge_added, edge) }
+      edge
+    end
+
+    # Remove an edge from the graph
+    def remove_edge(edge)
+      delete_edge(edge)
+      edge.each_vertex { |vertex| callback(vertex, :edge_removed, edge) }
+    end
+
+    protected
+
+    # Insert a prepared edge into the graph
+    #
+    def insert_edge(edge)
+      @edges << edge
+      edge.each_vertex { |vertex| @vertices.fetch(vertex) << edge }
+    end
+
+    def delete_edge(edge)
+      edge.each_vertex { |vertex| @vertices.fetch(vertex).delete(edge) }
+      @edges.delete(edge)
+    end
+
     private
 
     def callback(receiver, method, *args)
       receiver.send(method, *args) if receiver.respond_to?(method)
+    end
+
+    def initialize_edges
+      @edges = Set[]
     end
   end
 end
