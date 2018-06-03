@@ -32,6 +32,7 @@ module Tangle
     def add_vertex(vertex, name: nil)
       name ||= callback(vertex, :name)
       insert_vertex(vertex, name)
+      define_currified_methods(vertex, :vertex) if @currify
       callback(vertex, :added_to_graph, self)
       self
     end
