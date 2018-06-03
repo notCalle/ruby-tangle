@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 PartialOrder = Tangle::Directed::Acyclic::PartialOrder
 RSpec.describe PartialOrder do
   it 'is comparable' do

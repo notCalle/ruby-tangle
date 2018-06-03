@@ -1,10 +1,12 @@
-RSpec.describe Tangle::Graph do
+# frozen_string_literal: true
+
+RSpec.describe Tangle::Undirected::Graph do
   before :context do
-    @graph = Tangle::Graph.new
+    @graph = Tangle::Undirected::Graph.new
   end
 
-  it 'is a simple object' do
-    expect(@graph).to be_an Object
+  it 'is a specialization of a base graph' do
+    expect(@graph).to be_a Tangle::BaseGraph
   end
 
   it 'can have vertices' do
@@ -19,8 +21,8 @@ RSpec.describe Tangle::Graph do
     expect { @graph.add_vertex('a') }.not_to raise_error
   end
 
-  it 'can add new edges' do
-    expect(@graph.add_edge('a', 'a')).to be_a Tangle::Edge
+  it 'can add new undirected edges' do
+    expect(@graph.add_edge('a', 'a')).to be_a Tangle::Undirected::Edge
   end
 
   it 'can test (dis)connectedness' do

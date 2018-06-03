@@ -1,4 +1,11 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
+require 'simplecov'
+SimpleCov.start do
+  add_filter %r{^/spec/}
+end
+
 require 'tangle'
 
 RSpec.configure do |config|

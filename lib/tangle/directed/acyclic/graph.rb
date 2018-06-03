@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tangle/directed/graph'
 require 'tangle/directed/acyclic/partial_order'
 

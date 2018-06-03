@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'tangle/version'
 require 'tangle/errors'
-require 'tangle/graph'
-require 'tangle/simple/graph'
+require 'tangle/undirected/graph'
+require 'tangle/undirected/simple/graph'
 require 'tangle/directed/graph'
 require 'tangle/directed/acyclic/graph'
 
@@ -20,8 +22,9 @@ require 'tangle/directed/acyclic/graph'
 # => Directed graph with no edge cycles
 #
 module Tangle
-  MultiGraph = Tangle::Graph
-  SimpleGraph = Tangle::Simple::Graph
+  Graph = Tangle::Undirected::Graph
+  MultiGraph = Tangle::Undirected::Graph
+  SimpleGraph = Tangle::Undirected::Simple::Graph
   DiGraph = Tangle::Directed::Graph
   DAG = Tangle::Directed::Acyclic::Graph
 end

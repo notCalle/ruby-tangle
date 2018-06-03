@@ -1,10 +1,12 @@
-RSpec.describe Tangle::Simple::Graph do
+# frozen_string_literal: true
+
+RSpec.describe Tangle::Undirected::Simple::Graph do
   before :context do
-    @graph = Tangle::Simple::Graph[%w[a b], [%w[a b]]]
+    @graph = Tangle::Undirected::Simple::Graph[%w[a b], [%w[a b]]]
   end
 
-  it 'is a specialization of a graph' do
-    expect(@graph).to be_a Tangle::Graph
+  it 'is a specialization of an undirected graph' do
+    expect(@graph).to be_a Tangle::Undirected::Graph
   end
 
   it 'disallows loops' do

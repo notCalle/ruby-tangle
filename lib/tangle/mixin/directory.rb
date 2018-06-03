@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tangle
   module Mixin
     # Tangle mixin for loading a directory structure as a graph

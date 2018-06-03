@@ -1,4 +1,6 @@
-require 'tangle/edge'
+# frozen_string_literal: true
+
+require_relative '../edge'
 
 module Tangle
   module Directed
@@ -31,7 +33,7 @@ module Tangle
         super
         @tail = tail
         @head = head
-        @vertices = { tail => head }
+        @vertices = { tail => head }.freeze
       end
     end
   end
