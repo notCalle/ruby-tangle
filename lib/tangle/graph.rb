@@ -2,7 +2,6 @@
 
 require 'tangle/currify'
 require 'tangle/mixin'
-require 'tangle/mixin/connectedness'
 require 'tangle/edge'
 require 'tangle/graph_vertices'
 require 'tangle/graph_edges'
@@ -17,7 +16,6 @@ module Tangle
     include Tangle::GraphEdges
     include Tangle::Mixin::Initialize
     Edge = Tangle::Edge
-    DEFAULT_MIXINS = Tangle::Mixin::Connectedness::MIXINS
 
     # Initialize a new graph, preloading it with vertices and edges
     #
@@ -53,11 +51,11 @@ module Tangle
     # Any subclass of Graph should also subclass Edge to manage its unique
     # constraints.
     #
-    def initialize(currify: false, **kwargs)
+    def initialize(currify: false, mixins: [], **kwargs)
       @currify = currify
       initialize_vertices
       initialize_edges
-      initialize_mixins(**kwargs)
+      initialize_mixins(mixins: mixins, **kwargs)
     end
 
     # Return a subgraph, optionally filtered by a vertex selector block

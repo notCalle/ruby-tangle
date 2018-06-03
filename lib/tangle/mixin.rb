@@ -11,8 +11,7 @@ module Tangle
       private
 
       def initialize_mixins(mixins: nil, **kwargs)
-        @mixins = mixins || self.class::DEFAULT_MIXINS
-
+        @mixins = mixins
         extend_with_mixins unless @mixins.nil?
         initialize_kwargs(**kwargs) unless kwargs.empty?
       end

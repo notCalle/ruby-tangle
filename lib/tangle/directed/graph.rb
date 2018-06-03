@@ -9,7 +9,6 @@ module Tangle
     # A directed graph
     class Graph < Tangle::Graph
       Edge = Tangle::Directed::Edge
-      DEFAULT_MIXINS = [].freeze
 
       # Return the incoming edges for +vertex+
       currify :vertex, def in_edges(vertex)
