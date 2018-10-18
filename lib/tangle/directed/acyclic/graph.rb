@@ -19,6 +19,7 @@ module Tangle
         def insert_edge(edge)
           raise CyclicError if successor?(edge.head, edge.tail) ||
                                predecessor?(edge.tail, edge.head)
+
           super
         end
       end

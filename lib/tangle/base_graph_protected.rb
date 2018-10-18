@@ -11,6 +11,7 @@ module Tangle
       vertices.each do |vertex|
         delete_vertex(vertex) if block_given? && !yield(vertex)
         next if selected.nil?
+
         delete_vertex(vertex) unless selected.any? { |vtx| vtx.eql?(vertex) }
       end
     end

@@ -16,6 +16,7 @@ module Tangle
       def currified_methods(tag)
         mine = @currified_methods&.[](tag) || []
         return mine unless superclass.respond_to?(:currified_methods)
+
         superclass.currified_methods(tag) + mine
       end
 

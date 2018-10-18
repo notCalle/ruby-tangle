@@ -123,6 +123,7 @@ module Tangle
     #
     def edges(vertex = nil)
       return @edges if vertex.nil?
+
       @vertices.fetch(vertex)
     end
     currify :vertex, :edges
