@@ -66,6 +66,7 @@ module Tangle
           end
 
           return if lstat.symlink? && !@follow_directory_links
+
           stat.directory?
         end
       end
