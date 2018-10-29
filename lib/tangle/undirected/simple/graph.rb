@@ -13,6 +13,7 @@ module Tangle
         def insert_edge(edge)
           raise LoopError if edge.loop?
           raise MultiEdgeError if adjacent?(*edge.each_vertex)
+
           super
         end
       end

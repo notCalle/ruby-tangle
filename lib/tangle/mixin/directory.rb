@@ -11,7 +11,9 @@ module Tangle
     #   loaders:        list of object loader lambdas (mandatory)
     #                     ->(graph, **) { ... } => finished?
     #   follow_links:   bool for following symlinks to directories
-    #                   (default false)
+    #   exclude_root:   bool for excluding the root directory
+    #
+    # All bool options default to false.
     #
     # A loader lambda is called with the graph as only positional
     # argument, and a number of keyword arguments:
@@ -42,6 +44,7 @@ module Tangle
           @root_directory = options.fetch(:root)
           @directory_loaders = options.fetch(:loaders)
           @follow_directory_links = options[:follow_links]
+          @exclude_root = options[:exclude_root]
           load_directory_graph(@root_directory)
         end
 
@@ -57,6 +60,18 @@ module Tangle
         # +true+ if the object was a directory (or link to one,
         # and we're following links).
         def load_directory_object(path, parent = nil)
+          if @exclude_root
+            return true if path == @root_directory
+
+            parent = nil if parent == @root_directory
+          end
+
+          try_directory_loaders(path, parent)
+        end
+
+        # Try each directory loader, returning true if the object has
+        # children to follow
+        def try_directory_loaders(path, parent)
           stat = lstat = File.lstat(path)
           stat = File.stat(path) if lstat.symlink?
 
@@ -66,6 +81,7 @@ module Tangle
           end
 
           return if lstat.symlink? && !@follow_directory_links
+
           stat.directory?
         end
       end
