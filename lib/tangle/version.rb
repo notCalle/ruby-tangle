@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Tangle
+module Tangle # rubocop:disable Style/Documentation
   begin
     require 'git-version-bump'
     VERSION = GVB.version.freeze
