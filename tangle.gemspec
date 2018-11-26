@@ -7,7 +7,6 @@ require 'tangle/version'
 Gem::Specification.new do |spec|
   spec.name          = 'tangle'
   spec.version       = Tangle::VERSION
-  spec.date          = Tangle::DATE
   spec.authors       = ['Calle Englund']
   spec.email         = ['calle@discord.bofh.se']
 
