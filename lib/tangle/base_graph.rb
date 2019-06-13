@@ -70,6 +70,12 @@ module Tangle
       result
     end
 
+    def clone
+      result = super
+      result.copy_vertices_and_edges(self)
+      result
+    end
+
     def to_s
       "#<#{self.class}: #{vertices.count} vertices, #{edges.count} edges>"
     end
