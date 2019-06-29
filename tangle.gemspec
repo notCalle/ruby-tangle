@@ -4,6 +4,17 @@ lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'tangle/version'
 
+dev_deps = {
+  'bundler' => '~> 2.0',
+  'codecov' => '~> 0.1',
+  'fasterer' => '~> 0.4',
+  'pry' => '~> 0.11',
+  'rake' => '~> 10.0',
+  'rspec' => '~> 3.0',
+  'rubocop' => '~> 0.57',
+  'simplecov' => '~> 0.16'
+}
+
 Gem::Specification.new do |spec|
   spec.name          = 'tangle'
   spec.version       = Tangle::VERSION
@@ -26,11 +37,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'git-version-bump', '~> 0.15'
 
-  spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'fasterer', '~> 0.4'
-  spec.add_development_dependency 'pry', '~> 0.11'
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 0.57'
-  spec.add_development_dependency 'simplecov', '~> 0.16'
+  dev_deps.each { |d| spec.add_development_dependency(*d) }
 end

@@ -7,6 +7,12 @@ module Tangle
   module BaseGraphProtected
     protected
 
+    def copy_vertices_and_edges(from)
+      @vertices = from.instance_variable_get(:@vertices).dup
+      @vertices_by_name = from.instance_variable_get(:@vertices_by_name).dup
+      @edges = from.instance_variable_get(:@edges).dup
+    end
+
     def select_vertices!(selected = nil)
       vertices.each do |vertex|
         delete_vertex(vertex) if block_given? && !yield(vertex)
