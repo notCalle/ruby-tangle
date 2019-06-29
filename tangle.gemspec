@@ -6,6 +6,7 @@ require 'tangle/version'
 
 dev_deps = {
   'bundler' => '~> 2.0',
+  'codecov' => '~> 0.1',
   'fasterer' => '~> 0.4',
   'pry' => '~> 0.11',
   'rake' => '~> 10.0',
