@@ -14,11 +14,20 @@ RSpec.describe Tangle::Currify do
 
     it 'can declare a method to be currified' do
       expect {
-        class TestClass
-          def currified_method; end
+        class TestClass1 < TestClass
+          def currified_method(arg); end
           currify :test, :currified_method
         end
       }.not_to raise_error
+    end
+
+    it 'requires a currified method to have at least one argument' do
+      expect {
+        class TestClass2 < TestClass
+          def currified_noarg; end
+          currify :test, :currified_noarg
+        end
+      }.to raise_error Tangle::CurrifyError
     end
 
     context 'and a method is currified' do
