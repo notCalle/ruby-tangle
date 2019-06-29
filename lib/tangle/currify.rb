@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module Tangle
+  # Raised for zero arity of a currified method, subclass of ArgumentError
   class CurrifyError < ArgumentError
-    def initialize(msg = "method accepts no arguments", *)
+    def initialize(msg = 'method accepts no arguments', *)
       super
     end
   end
