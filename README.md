@@ -15,9 +15,11 @@ Tangle aims to untangle your graphs, by providing a set of classes for managing 
  * ~~Tree~~
 
 **Feature mixins**:
- * Connectedness
+ * Filesystem directory graph
  * ~~Coloring~~
  * ~~GraphViz~~
+
+See the [changelog](CHANGELOG.md) for recent changes.
 
 ## Installation
 
