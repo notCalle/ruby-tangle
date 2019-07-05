@@ -25,7 +25,7 @@ module Tangle
       # connected_subgraph(vertex) => Graph
       #
       def connected_subgraph(vertex)
-        subgraph { |other| connected_vertices?(vertex, other) }
+        subgraph { |other| connected?(vertex, other) }
       end
       alias component connected_subgraph
       alias connected_component connected_subgraph
@@ -34,7 +34,7 @@ module Tangle
       # left after removing the connected subgraph.
       #
       def disconnected_subgraph(vertex)
-        subgraph { |other| !connected_vertices?(vertex, other) }
+        subgraph { |other| !connected?(vertex, other) }
       end
 
       # A graph is connected if all vertices are connected to all vertices

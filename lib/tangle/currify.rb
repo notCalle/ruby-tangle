@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 module Tangle
+  # Raised for zero arity of a currified method, subclass of ArgumentError
+  class CurrifyError < ArgumentError
+    def initialize(msg = 'method accepts no arguments', *)
+      super
+    end
+  end
+
   # Currification of instance methods, for adding callbacks to other objects
   module Currify
     def self.included(base)
@@ -28,6 +35,8 @@ module Tangle
       #   class X
       #     currify :tag, :method
       def currify(tag, method)
+        raise CurrifyError if instance_method(method).arity.zero?
+
         @currified_methods ||= {}
         @currified_methods[tag] ||= []
         @currified_methods[tag] << method

@@ -1,4 +1,7 @@
-[![Gem Version](https://badge.fury.io/rb/tangle.svg)](https://badge.fury.io/rb/tangle) [![Maintainability](https://api.codeclimate.com/v1/badges/0d92a4d05b6bb5c06dce/maintainability)](https://codeclimate.com/github/notCalle/ruby-tangle/maintainability)
+[![Gem Version](https://badge.fury.io/rb/tangle.svg)](https://badge.fury.io/rb/tangle)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0d92a4d05b6bb5c06dce/maintainability)](https://codeclimate.com/github/notCalle/ruby-tangle/maintainability)
+[![codecov](https://codecov.io/gh/notCalle/ruby-tangle/branch/master/graph/badge.svg)](https://codecov.io/gh/notCalle/ruby-tangle)
+[![Build Status](https://dev.azure.com/notCalle/GitHub%20CI/_apis/build/status/notCalle.ruby-tangle)](https://dev.azure.com/notCalle/GitHub%20CI/_build/latest?definitionId=2)
 
 # Tangle
 
@@ -12,9 +15,11 @@ Tangle aims to untangle your graphs, by providing a set of classes for managing 
  * ~~Tree~~
 
 **Feature mixins**:
- * Connectedness
+ * Filesystem directory graph
  * ~~Coloring~~
  * ~~GraphViz~~
+
+See the [changelog](CHANGELOG.md) for recent changes.
 
 ## Installation
 

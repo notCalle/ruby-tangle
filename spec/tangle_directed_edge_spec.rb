@@ -4,10 +4,17 @@ RSpec.describe Tangle::Directed::Edge do
   before :context do
     @graph = Tangle::Directed::Graph[%w[a b]]
     @edge = @graph.add_edge('a', 'b')
+    @expected_s = '{a-->b}'
   end
 
   it 'is a specialization of an edge' do
     expect(@edge).to be_a Tangle::Edge
+  end
+
+  it 'has a string representation' do
+    @s = @edge.to_s
+    expect(@s).to be_a String
+    expect(@s).to eq @expected_s
   end
 
   it 'has a head vertex' do

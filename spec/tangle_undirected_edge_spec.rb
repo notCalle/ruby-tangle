@@ -3,10 +3,17 @@
 RSpec.describe Tangle::Undirected::Edge do
   before :example do
     @edge = Tangle::Undirected::Edge.new('a', 'b')
+    @expected_s = '{a<->b}'
   end
 
   it 'is a specialization of an Edge' do
     expect(@edge).to be_an Tangle::Edge
+  end
+
+  it 'has a string representation' do
+    @s = @edge.to_s
+    expect(@s).to be_a String
+    expect(@s).to eq @expected_s
   end
 
   it 'can have a name' do

@@ -72,6 +72,11 @@ RSpec.describe Tangle::Undirected::Graph do
         expect(@graph.connected?).to be true
         expect(@graph.disconnected?).to be false
       end
+
+      it 'can find a connected subgraph for the vertex' do
+        @subgraph = @graph.connected_subgraph('a')
+        expect(@subgraph.vertices).to include 'a'
+      end
     end
 
     context 'with a vertex, and a name' do
@@ -105,7 +110,8 @@ RSpec.describe Tangle::Undirected::Graph do
 
     context 'with two vertices only' do
       before :context do
-        @graph = Tangle::Graph[%w[a b]]
+        @vertices = %w[a b]
+        @graph = Tangle::Graph[@vertices]
       end
 
       it 'has vertices' do
@@ -119,6 +125,13 @@ RSpec.describe Tangle::Undirected::Graph do
       it 'is disconnected' do
         expect(@graph.disconnected?).to be true
         expect(@graph.connected?).to be false
+      end
+
+      it 'can find a disconnected subgraph for each vertex' do
+        @vertices.each do |vertex|
+          subgraph = @graph.disconnected_subgraph(vertex)
+          expect(subgraph.vertices).not_to include vertex
+        end
       end
     end
 
