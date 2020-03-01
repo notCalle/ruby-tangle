@@ -5,14 +5,14 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'tangle/version'
 
 dev_deps = {
-  'bundler' => '~> 2.0',
+  'bundler' => '~> 2.1',
   'codecov' => '~> 0.1',
-  'fasterer' => '~> 0.4',
-  'pry' => '~> 0.11',
-  'rake' => '~> 10.0',
-  'rspec' => '~> 3.0',
-  'rubocop' => '~> 0.57',
-  'simplecov' => '~> 0.16'
+  'fasterer' => '~> 0.8',
+  'pry' => '~> 0.12',
+  'rake' => '~> 12.3',
+  'rspec' => '~> 3.9',
+  'rubocop' => '~> 0.80',
+  'simplecov' => '~> 0.18'
 }
 
 Gem::Specification.new do |spec|
