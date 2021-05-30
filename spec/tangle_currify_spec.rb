@@ -7,14 +7,14 @@ RSpec.describe Tangle::Currify do
 
   context 'when included in a class' do
     before :context do
-      class TestClass
+      @test_class = Class.new do
         include Tangle::Currify
       end
     end
 
     it 'can declare a method to be currified' do
       expect {
-        class TestClass1 < TestClass
+        Class.new @test_class do
           def currified_method(arg); end
           currify :test, :currified_method
         end
@@ -23,7 +23,7 @@ RSpec.describe Tangle::Currify do
 
     it 'requires a currified method to have at least one argument' do
       expect {
-        class TestClass2 < TestClass
+        Class.new @test_class do
           def currified_noarg; end
           currify :test, :currified_noarg
         end
@@ -32,7 +32,9 @@ RSpec.describe Tangle::Currify do
 
     context 'and a method is currified' do
       before :context do
-        class TestClass
+        @test_class = Class.new do
+          include Tangle::Currify
+
           def initialize(object)
             define_currified_methods(object, :test)
           end
@@ -45,18 +47,17 @@ RSpec.describe Tangle::Currify do
       end
 
       it 'knows that the method is currified' do
-        expect(TestClass.currified_methods(:test)).to include(:curry_arg)
+        expect(@test_class.currified_methods(:test)).to include(:curry_arg)
       end
 
       it 'can create curried methods in an object' do
         object = Object.new
-        TestClass.new(object)
+        @test_class.new(object)
         expect(object.curry_arg).to eq object
       end
 
       it 'propagates currified methods to subclasses' do
-        class TestSubClass < TestClass; end
-        expect(TestSubClass.currified_methods(:test)).to include(:curry_arg)
+        expect(Class.new(@test_class).currified_methods(:test)).to include(:curry_arg)
       end
     end
   end

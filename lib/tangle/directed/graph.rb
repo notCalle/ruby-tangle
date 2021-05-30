@@ -117,8 +117,8 @@ module Tangle
 
       private
 
-      def new_edge(*args)
-        Edge.new(*args)
+      def new_edge(...)
+        Edge.new(...)
       end
     end
   end

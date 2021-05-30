@@ -22,7 +22,7 @@ task :check_version do
   raise 'Internal revision!' unless GVB.internal_revision.empty?
 end
 
-task test: %i[spec rubocop]
+task test: %i[rubocop spec]
 task build: %i[spec]
 task release: %i[rubocop check_version]
 task default: %i[test]

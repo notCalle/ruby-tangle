@@ -40,7 +40,7 @@ module Tangle
 
         private
 
-        def initialize_kwarg_directory(**options)
+        def initialize_kwarg_directory(options)
           @root_directory = options.fetch(:root)
           @directory_loaders = options.fetch(:loaders)
           @follow_directory_links = options[:follow_links]

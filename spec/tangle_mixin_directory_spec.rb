@@ -20,7 +20,6 @@ RSpec.describe Tangle::Mixin::Directory do
         graph.add_edge(parent, path) unless parent.nil?
       end
       @directory_options = { root: @root, loaders: [@loader] }
-      @kwargs = { mixins: @mixins, directory: @directory_options }
     end
 
     it 'requires a directory root' do
@@ -36,7 +35,9 @@ RSpec.describe Tangle::Mixin::Directory do
     end
 
     it 'remembers its root directory' do
-      expect(Tangle::DiGraph.new(@kwargs).root_directory).to eq @root
+      expect(
+        Tangle::DiGraph.new(mixins: @mixins, directory: @directory_options).root_directory
+      ).to eq @root
     end
 
     it 'can exclude the root directory from the graph' do
