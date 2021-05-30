@@ -5,14 +5,14 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'tangle/version'
 
 dev_deps = {
-  'bundler' => '~> 2.1',
-  'codecov' => '~> 0.1',
-  'fasterer' => '~> 0.8',
-  'pry' => '~> 0.12',
-  'rake' => '~> 12.3',
-  'rspec' => '~> 3.9',
-  'rubocop' => '~> 0.80',
-  'simplecov' => '~> 0.18'
+  'bundler' => '~> 2.2',
+  'codecov' => '~> 0.5.0',
+  'fasterer' => '~> 0.9.0',
+  'pry' => '~> 0.14.0',
+  'rake' => '~> 13.0',
+  'rspec' => '~> 3.10',
+  'rubocop' => '~> 1.15',
+  'simplecov' => '~> 0.21.0'
 }
 
 Gem::Specification.new do |spec|
@@ -33,9 +33,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.platform = Gem::Platform::RUBY
-  spec.required_ruby_version = '~> 2.3'
+  spec.required_ruby_version = '~> 3.0'
 
-  spec.add_dependency 'git-version-bump', '~> 0.15'
+  spec.add_dependency 'git-version-bump', '~> 0.17.0'
 
   dev_deps.each { |d| spec.add_development_dependency(*d) }
 end
