@@ -12,6 +12,8 @@ dev_deps = {
   'rake' => '~> 13.0',
   'rspec' => '~> 3.10',
   'rubocop' => '~> 1.15',
+  'rubocop-rake' => '~> 0.5.1',
+  'rubocop-rspec' => '~> 2.3',
   'simplecov' => '~> 0.21.0'
 }
 

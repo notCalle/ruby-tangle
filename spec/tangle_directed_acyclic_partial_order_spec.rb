@@ -16,9 +16,7 @@ RSpec.describe PartialOrder do
   end
 
   it 'partially orders vertices' do
-    # rubocop:disable Lint/UselessComparison
-    expect(@order_a <= @order_a).to be true
-    # rubocop:enable Lint/UselessComparison
+    expect(@order_a <= @order_a).to be true  # rubocop:disable Lint/BinaryOperatorWithIdenticalOperands
     expect(@order_a <= @order_b).to be true
     expect(@order_b <= @order_a).to be false
     expect(@order_a <= @order_c).to be false
