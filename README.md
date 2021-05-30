@@ -86,7 +86,7 @@ Tangle::Graph.new(mixins: [WeightedEdges])
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/notCalle/tangle. Pull requests should be rebased to HEAD of `master` before submitting, and all commits must be signed with valid GPG key. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/notCalle/tangle. Pull requests should be rebased to HEAD of `main` before submitting, and all commits must be signed with valid GPG key. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
