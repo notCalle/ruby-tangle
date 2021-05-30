@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The required Ruby version is now 3.0.
+
+- Mixin initializers that relied on Ruby 2 kwarg splat semantics for Hash argument
+  must be changed to accept a single positional argument.
+
+- Dependencies have been updated.
+
 
 ## [0.10.2] - 2019-07-05
 
