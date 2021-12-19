@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'tangle/version'
 
 dev_deps = {
-  'bundler' => '~> 2.2',
+  'bundler' => '~> 2.2.33',
   'codecov' => '~> 0.5.0',
   'fasterer' => '~> 0.9.0',
   'pry' => '~> 0.14.0',
