@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'tangle/version'
 
 dev_deps = {
-  'bundler' => '~> 2.2',
+  'bundler' => '~> 2.2.33',
   'codecov' => '~> 0.5.0',
   'fasterer' => '~> 0.9.0',
   'pry' => '~> 0.14.0',
@@ -40,4 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'git-version-bump', '~> 0.17.0'
 
   dev_deps.each { |d| spec.add_development_dependency(*d) }
+  spec.metadata = {
+    'rubygems_mfa_required' => 'true'
+  }
 end
