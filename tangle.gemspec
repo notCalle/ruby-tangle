@@ -40,4 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'git-version-bump', '~> 0.17.0'
 
   dev_deps.each { |d| spec.add_development_dependency(*d) }
+  spec.metadata = {
+    'rubygems_mfa_required' => 'true'
+  }
 end
